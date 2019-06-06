@@ -4,7 +4,7 @@ namespace Core\Filesystem;
 /**
  * 文件操作系统的接口
  * @author chengf28 <chengf_28@163.com>
- * God Bless the Code
+ * If I can go death, I will
  */
 interface FilesystemInterface
 {
@@ -12,7 +12,7 @@ interface FilesystemInterface
      * 判断是否存在
      * @param string $filename
      * @return bool
-     * God Bless the Code
+     * If I can go death, I will
      */
     public function has(string $filename);
 
@@ -21,7 +21,7 @@ interface FilesystemInterface
      * @param string $filename
      * @param bool $lock
      * @return string
-     * God Bless the Code
+     * If I can go death, I will
      */
     public function get(string $filename,bool $lock = false);
     
@@ -30,7 +30,7 @@ interface FilesystemInterface
      * @param string $filename
      * @param mixed $data
      * @return void
-     * God Bless the Code
+     * If I can go death, I will
      */
     public function put(string $filename,$data,$locl=false);
 
@@ -39,7 +39,7 @@ interface FilesystemInterface
      * @param string $source
      * @param string $target
      * @return bool
-     * God Bless the Code
+     * If I can go death, I will
      */
     public function move(string $source, string $target);
     
@@ -48,7 +48,7 @@ interface FilesystemInterface
      * @param string $source
      * @param string $target
      * @return bool
-     * God Bless the Code
+     * If I can go death, I will
      */
     public function copy(string $source, string $target);
 
@@ -56,7 +56,7 @@ interface FilesystemInterface
      * 删除文件
      * @param string $target
      * @return bool
-     * God Bless the Code
+     * If I can go death, I will
      */
     public function delete(string $target);
 }

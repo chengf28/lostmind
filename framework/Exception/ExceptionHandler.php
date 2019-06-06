@@ -4,13 +4,13 @@ namespace Core\Exception;
 /**
  * 异常处理
  * @author chengf28 <chengf_28@163.com>
- * God Bless the Code
+ * If I can go death, I will
  */
 class ExceptionHandler
 {
     /**
      * 初始化
-     * God Bless the Code
+     * If I can go death, I will
      */
     public function __construct()
     {
@@ -27,7 +27,7 @@ class ExceptionHandler
      * @param string $errfile
      * @param string $errline
      * @return void
-     * God Bless the Code
+     * If I can go death, I will
      */
     public function ErrorHandler( int $errno , string $errstr , string $errfile , string $errline )
     {
@@ -39,7 +39,7 @@ class ExceptionHandler
      * 异常处理
      * @param \Throwable $e
      * @return void
-     * God Bless the Code
+     * If I can go death, I will
      */
     public function ExcepHandler( \Throwable $e )
     {

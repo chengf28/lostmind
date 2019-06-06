@@ -7,7 +7,7 @@ use Core\Filesystem\FileNotFoundException;
 /**
  * 文件操作系统
  * @author chengf28 <chengf_28@163.com>
- * God Bless the Code
+ * IF I CAN GO DEATH, I WILL
  */
 class Filesystem implements FilesystemInterface
 {  
@@ -15,7 +15,7 @@ class Filesystem implements FilesystemInterface
      * 判断是否存在
      * @param string $filename
      * @return bool
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     public function has(string $filename)
     { 
@@ -27,7 +27,7 @@ class Filesystem implements FilesystemInterface
      * @param string $filename
      * @param bool $lock
      * @return string
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     public function get(string $filename, bool $lock = false)
     {
@@ -63,7 +63,7 @@ class Filesystem implements FilesystemInterface
      * @param mixed $data
      * @param bool $lock
      * @return void
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     public function put(string $filename, $data,$lock=false)
     {
@@ -98,7 +98,7 @@ class Filesystem implements FilesystemInterface
      * @param string $source
      * @param string $target
      * @return void
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     private function checkST(string $source, string $target)
     {
@@ -119,7 +119,7 @@ class Filesystem implements FilesystemInterface
      * @param string $source
      * @param string $target
      * @return bool
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     public function move(string $source, string $target)
     {
@@ -132,7 +132,7 @@ class Filesystem implements FilesystemInterface
      * @param string $source
      * @param string $target
      * @return bool
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     public function copy(string $source, string $target)
     {
@@ -145,7 +145,7 @@ class Filesystem implements FilesystemInterface
      * 删除文件
      * @param string $target
      * @return bool
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     public function delete(string $target)
     {

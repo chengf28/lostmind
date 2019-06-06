@@ -9,21 +9,21 @@ class Container implements \ArrayAccess
     /**
      * 绑定的类容器
      * @var array
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     protected $binds     = [];
 
     /**
      * 存放已经实例化好的类容器
      * @var array
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     protected $instances = [];
 
     /**
      * 参数
      * @var array
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     protected $withs     = [];
 
@@ -32,7 +32,7 @@ class Container implements \ArrayAccess
      * @param string $abstract
      * @param mixed $concrete
      * @return void
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     public function bind( string $abstract , $concrete )
     {
@@ -45,7 +45,7 @@ class Container implements \ArrayAccess
      * @param string $abstract
      * @param mixed $concrete
      * @return void
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     public function singleBind( string $abstract , $concrete )
     {
@@ -58,7 +58,7 @@ class Container implements \ArrayAccess
      * @param string $abstract
      * @param mixed $concrete
      * @return void
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     public function instances( string $abstract , $concrete )
     {
@@ -69,7 +69,7 @@ class Container implements \ArrayAccess
      * 实例化一个类
      * @param  mixed $abstract
      * @return mixed
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     public function make( $abstract )
     {
@@ -81,7 +81,7 @@ class Container implements \ArrayAccess
      * @param mixed $abstract
      * @param array $parameters
      * @return mixed
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     public function makeWith( $abstract , array $parameters = [] )
     {
@@ -124,7 +124,7 @@ class Container implements \ArrayAccess
      * 获取到已经绑定的类的具体
      * @param string $abstract
      * @return mixed
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     protected function isBind( string $abstract )
     {
@@ -135,7 +135,7 @@ class Container implements \ArrayAccess
      * 获取到对应的实例
      * @param string $abstract
      * @return void
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     protected function getConcrete( string $abstract )
     {
@@ -146,7 +146,7 @@ class Container implements \ArrayAccess
      * 是否分享模式
      * @param string $abstract
      * @return bool
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     protected function isSingle( string $abstract )
     {
@@ -157,7 +157,7 @@ class Container implements \ArrayAccess
      * 是否存在在单例容器中
      * @param string $abstract
      * @return bool
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     protected function isInstance( string $abstract )
     {
@@ -168,7 +168,7 @@ class Container implements \ArrayAccess
      * 获取到单例
      * @param string $abstract
      * @return mixed
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     protected function getInstance( string $abstract )
     {
@@ -179,7 +179,7 @@ class Container implements \ArrayAccess
      * @param [type] $abstract
      * @param [type] $concrete
      * @return bool
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     protected function isBuildable( $abstract , $concrete)
     {
@@ -191,7 +191,7 @@ class Container implements \ArrayAccess
      * 判断是否属于Closure
      * @param mixed $concrete
      * @return bool
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     private function isClosure( $concrete )
     {
@@ -203,7 +203,7 @@ class Container implements \ArrayAccess
      * @param mixed $concrete
      * @param array $parameter
      * @return mixed
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     protected function build( $concrete ,array $parameter = [])
     {
@@ -257,7 +257,7 @@ class Container implements \ArrayAccess
     /**
      * 获取到最近的参数;
      * @return void
-     * God Bless the Code
+     * IF I CAN GO DEATH, I WILL
      */
     protected function getFinalParameter()
     {

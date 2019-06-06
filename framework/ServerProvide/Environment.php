@@ -6,6 +6,11 @@ class Environment extends ServerProvideAbstract
 {
     public function start()
     {
-        $this->app['file'];
+       var_dump($this->app->make('app.configPath'));
+    }
+
+    public function getFile()
+    {
+        
     }
 }
