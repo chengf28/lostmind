@@ -1,0 +1,28 @@
+{
+    "name": "chengf28/lostmind",
+    "description": "If I can go death, I will",
+    "type": "project",
+    "require": {
+        "chengf28/dblite": "^0.1.0",
+        "php": ">=7.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~6.5"
+            
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "CHEN",
+            "email": "chengf_28@163.com"
+        }
+    ],
+    "autoload": {
+        "classmap": [
+            "framework"
+        ],
+        "psr-4": {
+            "Test\\":"test/"
+        }
+    }
+}
