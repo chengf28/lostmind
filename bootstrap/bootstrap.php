@@ -11,5 +11,3 @@ $app = new Application(__ROOT__);
 $app->instances('ExcepthonHandler', new Core\Exception\ExceptionHandler);
 // 开始
 $app->start();
-
-// var_dump($app['file']);
