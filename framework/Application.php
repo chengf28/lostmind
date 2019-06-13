@@ -8,6 +8,7 @@ class Application extends Container
 
     protected $EnvironmentFileName = '.env';
 
+    protected $config  = [];
     /**
      * 构造
      * @param string $path
@@ -56,7 +57,8 @@ class Application extends Container
         {
            $this->make($class)->boot($this);
         },[
-            \Core\ServerProvide\Environment::class
+            \Core\ServerProvide\Environment::class,
+            \Core\ServerProvide\Configuration::class
         ]);
     }
 
@@ -70,4 +72,8 @@ class Application extends Container
         $this->EnvironmentFileName = $filename;
     }
     
+    public function setConfig(string $name, string $key, $value)
+    {
+        $this->config["{$name}.{$key}"] = $value;
+    }
 }
