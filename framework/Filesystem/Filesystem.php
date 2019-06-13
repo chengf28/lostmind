@@ -58,6 +58,42 @@ class Filesystem implements FilesystemInterface
     }
 
     /**
+     * 按行读取文件内容
+     * @param string $filename
+     * @param bool $lock
+     * @return \Generator
+     * IF I CAN GO DEATH, I WILL
+     */
+    public function getLine(string $filename, bool $lock = false)
+    {
+        if (!is_readable($filename))
+        {
+            throw new FileNotFoundException($filename,1);
+        }
+        if(!is_file($filename))
+        {
+            throw new \InvalidArgumentException("Is not a File at path $filename",2);
+        }
+        // 打开资源句柄
+        $fd = fopen($filename,'rb+');
+        if (!$fd) 
+        {
+            throw new \LogicException("Can't not create file stream",4);
+        }
+        // 加入锁
+        $lock && flock($fd,LOCK_SH);
+        try{
+            while ($line = fgets($fd)) 
+            {
+                yield trim($line);
+            }
+        }finally{
+            // 解锁
+            $lock && flock($fd,LOCK_UN);
+            fclose($fd);
+        }
+    }
+    /**
      * 插入数据
      * @param string $filename
      * @param mixed $data

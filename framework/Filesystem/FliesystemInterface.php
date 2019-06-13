@@ -26,6 +26,14 @@ interface FilesystemInterface
     public function get(string $filename,bool $lock = false);
     
     /**
+     * 按行读取文件内容
+     * @param string $filename
+     * @param bool $lock
+     * @return \Generator
+     * IF I CAN GO DEATH, I WILL
+     */
+    public function getLine(string $filename, bool $lock = false);
+    /**
      * 向目标文件写入内容
      * @param string $filename
      * @param mixed $data

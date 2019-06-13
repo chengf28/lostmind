@@ -6,6 +6,8 @@ class Application extends Container
 {
     protected $rootPath;
 
+    protected $EnvironmentFileName = '.env';
+
     /**
      * 构造
      * @param string $path
@@ -56,6 +58,16 @@ class Application extends Container
         },[
             \Core\ServerProvide\Environment::class
         ]);
+    }
+
+    public function getEnvironmentFileName()
+    {
+        return $this->EnvironmentFileName;
+    }
+
+    public function setEnvironmentFileName(string $filename)
+    {
+        $this->EnvironmentFileName = $filename;
     }
     
 }
