@@ -1,5 +1,6 @@
 <?php
 use Core\Application;
+use Core\Request\Request;
 
 #-----------------------------
 # 初始化

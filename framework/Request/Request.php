@@ -7,9 +7,10 @@ class Request
 
     protected $head;
 
-
-    public function __construct(\Core\Application $app )
+    public function __construct()
     {
         
     }
+
+    
 }
