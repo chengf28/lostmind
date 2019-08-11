@@ -1,16 +1,15 @@
 <?php
+namespace Core\Router;
 
 class Route
 {
-    public static function get($uri,$uses)
+    public function get()
     {
 
     }
-
-    public static function post($uri,$uses)
-    {
-
-    }
-
     
+    public function loader(string $path)
+    {
+        require $path;
+    }   
 }
