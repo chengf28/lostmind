@@ -66,7 +66,8 @@ class Application extends Container
             $this->make($class)->boot($this);
         }, [
             \Core\ServerProvide\Environment::class,
-            \Core\ServerProvide\Configuration::class
+            \Core\ServerProvide\Configuration::class,
+            \Core\ServerProvide\FacadeRegister::class
         ]);
     }
 
