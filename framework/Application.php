@@ -1,5 +1,7 @@
 <?php
+
 namespace Core;
+
 use Core\Container\Container;
 
 class Application extends Container
@@ -16,12 +18,12 @@ class Application extends Container
      */
     public function __construct(string $path)
     {
-        $this->rootPath = trim($path,'\\').DIRECTORY_SEPARATOR;
+        $this->rootPath = trim($path, '\\') . DIRECTORY_SEPARATOR;
         // 注册自己
-        $this->bind('app',$this);
-        $this->instances('app.rootPath',$this->rootPath);
-        $this->instances('app.envPath',$this->rootPath);
-        $this->instances('app.configPath',$this->rootPath.'config'.DIRECTORY_SEPARATOR);
+        $this->bind('app', $this);
+        $this->instances('app.rootPath', $this->rootPath);
+        $this->instances('app.envPath', $this->rootPath);
+        $this->instances('app.configPath', $this->rootPath . 'config' . DIRECTORY_SEPARATOR);
     }
 
     /**
@@ -44,14 +46,12 @@ class Application extends Container
      */
     protected function baseRegister()
     {
-        foreach (
-            [
+        foreach ([
                 // 文件操作系统
                 'file' => \Core\Filesystem\Filesystem::class,
-            ] 
-        as $abstract => $concrete) 
-        {
-            $this->bind($abstract,$concrete);
+            ]
+            as $abstract => $concrete) {
+            $this->bind($abstract, $concrete);
         }
     }
 
@@ -62,10 +62,9 @@ class Application extends Container
      */
     protected function loadServerProvides()
     {
-        array_map(function($class)
-        {
-           $this->make($class)->boot($this);
-        },[
+        array_map(function ($class) {
+            $this->make($class)->boot($this);
+        }, [
             \Core\ServerProvide\Environment::class,
             \Core\ServerProvide\Configuration::class
         ]);
@@ -91,7 +90,7 @@ class Application extends Container
     {
         $this->EnvironmentFileName = $filename;
     }
-    
+
     /**
      * 设置配置文件
      * @param string $key
@@ -112,14 +111,12 @@ class Application extends Container
      */
     public function getConfig(string $key = null)
     {
-        if (is_null($key)) 
-        {
+        if (is_null($key)) {
             return $this->config;
         }
-        
-        if(strpos($key,'.') !== false)
-        {
-            list($name,$namekey) = explode('.',$key,2);
+
+        if (strpos($key, '.') !== false) {
+            list($name, $namekey) = explode('.', $key, 2);
             return $this->config[$name][$namekey] ?? [];
         }
 
