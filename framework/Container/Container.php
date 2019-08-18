@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\Container;
 
 #-----------------------------
@@ -34,12 +35,12 @@ class Container implements \ArrayAccess
      * @return void
      * IF I CAN GO DEATH, I WILL
      */
-    public function bind( string $abstract , $concrete )
+    public function bind(string $abstract, $concrete)
     {
         $single = false;
-        $this->binds[$abstract] = compact('concrete','single');
+        $this->binds[$abstract] = compact('concrete', 'single');
     }
-    
+
     /**
      * 初始化后一直保存
      * @param string $abstract
@@ -47,10 +48,10 @@ class Container implements \ArrayAccess
      * @return void
      * IF I CAN GO DEATH, I WILL
      */
-    public function singleBind( string $abstract , $concrete )
+    public function singleBind(string $abstract, $concrete)
     {
         $single = true;
-        $this->binds[$abstract] = compact('concrete','single');
+        $this->binds[$abstract] = compact('concrete', 'single');
     }
 
     /**
@@ -60,7 +61,7 @@ class Container implements \ArrayAccess
      * @return void
      * IF I CAN GO DEATH, I WILL
      */
-    public function instances( string $abstract , $concrete )
+    public function instances(string $abstract, $concrete)
     {
         $this->instances[$abstract] = $concrete;
     }
@@ -71,7 +72,7 @@ class Container implements \ArrayAccess
      * @return mixed
      * IF I CAN GO DEATH, I WILL
      */
-    public function make( $abstract )
+    public function make($abstract)
     {
         return $this->makeWith($abstract);
     }
@@ -83,37 +84,32 @@ class Container implements \ArrayAccess
      * @return mixed
      * IF I CAN GO DEATH, I WILL
      */
-    public function makeWith( $abstract , array $parameters = [] )
+    public function makeWith($abstract, array $parameters = [])
     {
         // 入栈
-        if (!empty($parameters)) 
-        {
+        if (!empty($parameters)) {
             $this->withs[] = $parameters;
         }
 
 
         // 查看是否已经在实例化的
-        if ( $this->isInstance($abstract) )
-        {
+        if ($this->isInstance($abstract)) {
             return $this->getInstance($abstract);
         }
 
         // 取得具体
         $concrete = $this->getConcrete($abstract);
-        if ( $this->isBuildable( $abstract , $concrete  ) ) 
-        {
+        if ($this->isBuildable($abstract, $concrete)) {
             // 满足构建条件,构建(实例化)该类
-            $object = $this->build( $concrete );
-        }else{
-            $object = $this->makeWith( $concrete );
+            $object = $this->build($concrete);
+        } else {
+            $object = $this->makeWith($concrete);
         }
         // 如果有参数,则出栈
-        if (count($this->withs)) 
-        {
+        if (count($this->withs)) {
             array_pop($this->withs);
         }
-        if ( $this->isSingle($abstract) ) 
-        {
+        if ($this->isSingle($abstract)) {
             $this->instances[$abstract] = $concrete;
         }
         // 返回实例化好的对象
@@ -126,7 +122,7 @@ class Container implements \ArrayAccess
      * @return mixed
      * IF I CAN GO DEATH, I WILL
      */
-    protected function isBind( string $abstract )
+    protected function isBind(string $abstract)
     {
         return isset($this->binds[$abstract]);
     }
@@ -137,7 +133,7 @@ class Container implements \ArrayAccess
      * @return void
      * IF I CAN GO DEATH, I WILL
      */
-    protected function getConcrete( string $abstract )
+    protected function getConcrete(string $abstract)
     {
         return $this->isBind($abstract) ? $this->binds[$abstract]['concrete'] : $abstract;
     }
@@ -148,7 +144,7 @@ class Container implements \ArrayAccess
      * @return bool
      * IF I CAN GO DEATH, I WILL
      */
-    protected function isSingle( string $abstract )
+    protected function isSingle(string $abstract)
     {
         return $this->isBind($abstract) ? $this->binds[$abstract]['single'] : false;
     }
@@ -159,7 +155,7 @@ class Container implements \ArrayAccess
      * @return bool
      * IF I CAN GO DEATH, I WILL
      */
-    protected function isInstance( string $abstract )
+    protected function isInstance(string $abstract)
     {
         return isset($this->instances[$abstract]);
     }
@@ -170,21 +166,21 @@ class Container implements \ArrayAccess
      * @return mixed
      * IF I CAN GO DEATH, I WILL
      */
-    protected function getInstance( string $abstract )
+    protected function getInstance(string $abstract)
     {
         return $this->instances[$abstract];
     }
     /**
      * 判断一个concrete是否可以去build 
-     * @param [type] $abstract
-     * @param [type] $concrete
+     * @param mixed $abstract
+     * @param mixed $concrete
      * @return bool
      * IF I CAN GO DEATH, I WILL
      */
-    protected function isBuildable( $abstract , $concrete)
+    protected function isBuildable($abstract, $concrete)
     {
         // 满足 实例和抽象同名(类的具体名称) 或者 实例为一个匿名方法则认为可以去构建
-        return ($concrete === $abstract || $this->isClosure($concrete) );
+        return ($concrete === $abstract || $this->isClosure($concrete));
     }
 
     /**
@@ -193,7 +189,7 @@ class Container implements \ArrayAccess
      * @return bool
      * IF I CAN GO DEATH, I WILL
      */
-    private function isClosure( $concrete )
+    private function isClosure($concrete)
     {
         return $concrete instanceof \Closure;
     }
@@ -205,49 +201,43 @@ class Container implements \ArrayAccess
      * @return mixed
      * IF I CAN GO DEATH, I WILL
      */
-    protected function build( $concrete ,array $parameter = [])
+    protected function build($concrete, array $parameter = [])
     {
         // 如果是构造函数
-        if ( $this->isClosure($concrete) )
-        {
-            return call_user_func($concrete,$parameter);
+        if ($this->isClosure($concrete)) {
+            return call_user_func($concrete, $parameter);
         }
         // 反射
-        $reflectionclass = new \ReflectionClass( '\\'.$concrete );
-        
+        $reflectionclass = new \ReflectionClass('\\' . $concrete);
+
         // 判断是否可以实例化
-        if ( !$reflectionclass->IsInstantiable() ) 
-        {
+        if (!$reflectionclass->IsInstantiable()) {
             throw new Exception("The class {$concrete} can't instantiable , please check it ", 1);
         }
         $construct = $reflectionclass->getConstructor();
         // 如果返回NULL则不存在
-        if ( !$construct )
-        {
+        if (!$construct) {
             // 直接实例化该类返回
             return new $concrete;
         }
         // 查看实例化函数是否有参数需要注入
-        $buildNeeds = $this->buildParameters( $construct->getParameters() );
+        $buildNeeds = $this->buildParameters($construct->getParameters());
         // 实例化
         return $reflectionclass->newInstanceArgs($buildNeeds);
     }
 
-    protected function buildParameters( array $parameters )
+    protected function buildParameters(array $parameters)
     {
         $return = [];
-        foreach ( $parameters as $parameter ) 
-        {
+        foreach ($parameters as $parameter) {
             // 如果有参数,则判断是否在参数数组中
-            if ( !empty($withs = $this->getFinalParameter()) && isset($withs[$parameter->getName()]) ) 
-            {
+            if (!empty($withs = $this->getFinalParameter()) && isset($withs[$parameter->getName()])) {
                 $return[] = $withs[$parameter->getName()];
                 continue;
             }
-            
+
             // 如果不在参数堆中,检查是否为一个类,然后实例化他
-            if( !is_null($class = $parameter->getClass()) )
-            {
+            if (!is_null($class = $parameter->getClass())) {
                 $return[] = $this->make($class->name);
             }
         }
@@ -273,8 +263,7 @@ class Container implements \ArrayAccess
     {
         $this->bind(
             $offset,
-            $value instanceof \Closure ? $value : function() use ($value)
-            {
+            $value instanceof \Closure ? $value : function () use ($value) {
                 return $value;
             }
         );

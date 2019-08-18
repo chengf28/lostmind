@@ -3,20 +3,72 @@
 namespace Core\Router;
 
 class Router
-{ 
-    
-    private $collection;
+{
+    private $regex;
 
-    private $generator;
+    private $params;
 
-    public function __construct(\Core\Route\RouteCollection $collection, \Core\Router\RouteGenerator $generator)
+    private $controller;
+
+    private $method;
+
+    /**
+     * 添加正则公式
+     * @param string $regex
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
+    public function where(string $regex)
     {
-        $this->collection = $collection;
-        $this->generator  = $generator;
+        $this->regex = $regex;
     }
 
-    public function get()
+    /**
+     * 获得正则
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
+    public function getRegex()
     {
+        return $this->regex;
+    }
 
+    /**
+     * 添加参数
+     * @param mixed $param
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
+    public function addParam($param)
+    {
+        $this->params[] = $param;
+    }
+
+    /**
+     * 添加控制器
+     * @param string $controller
+     * @return string
+     * Real programmers don't read comments, novices do
+     */
+    public function controller(string $controller = null)
+    {
+        if (!is_null($controller)) {
+            $this->controller = $controller;
+        }
+        return $this->controller;
+    }
+
+    /**
+     * 方法
+     * @param string $method
+     * @return string
+     * Real programmers don't read comments, novices do
+     */
+    public function method(string $method = null)
+    {
+        if (!is_null($method)) {
+            $this->method = $method;
+        }
+        return $this->method;
     }
 }
