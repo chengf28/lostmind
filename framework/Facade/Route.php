@@ -8,6 +8,6 @@ class Route extends Facade
 {
     protected static function getFacadeName()
     {
-        return \Core\Router\RouteGenerator::class;
+        return 'route';
     }
 }

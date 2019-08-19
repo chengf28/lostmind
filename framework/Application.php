@@ -36,6 +36,7 @@ class Application extends Container
         // 框架内容注册
         $this->baseRegister();
 
+        // 加载服务
         $this->loadServerProvides();
     }
 
@@ -46,9 +47,11 @@ class Application extends Container
      */
     protected function baseRegister()
     {
+        // 工具类别名注册
         foreach ([
                 // 文件操作系统
                 'file' => \Core\Filesystem\Filesystem::class,
+                'route' => \Core\Router\RouteGenerator::class,
             ]
             as $abstract => $concrete) {
             $this->bind($abstract, $concrete);
@@ -65,9 +68,10 @@ class Application extends Container
         array_map(function ($class) {
             $this->make($class)->boot($this);
         }, [
-            \Core\ServerProvide\Environment::class,
-            \Core\ServerProvide\Configuration::class,
-            \Core\ServerProvide\FacadeRegister::class
+            \Core\ServerProvide\EnvironmentProvider::class,
+            \Core\ServerProvide\ConfigurationProvider::class,
+            \Core\ServerProvide\FacadeRegisterProvide::class,
+            \Core\ServerProvide\RouteProvider::class,
         ]);
     }
 
