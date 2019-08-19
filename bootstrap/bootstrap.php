@@ -11,4 +11,4 @@ $app = new Application(__ROOT__);
 // 错误与异常处理注册
 $app->instances('ExcepthonHandler', new Core\Exception\ExceptionHandler);
 // 开始
-$app->start();
+$app->start()->send();

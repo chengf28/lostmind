@@ -3,6 +3,8 @@
 namespace Core\Router;
 
 use Core\Router\Router;
+use Core\Facade\Route;
+
 use InvalidArgumentException;
 
 class RouteGenerator
@@ -18,18 +20,63 @@ REGEX;
 
     private $collection;
 
-
+    /**
+     * 构建函数,依赖注入
+     * @param \Core\Route\RouteCollection $collection
+     * Real programmers don't read comments, novices do
+     */
     public function __construct(\Core\Route\RouteCollection $collection)
     {
         $this->collection = $collection;
     }
 
-    public function parse(string $uri)
+    /**
+     * 解析
+     * @param string $method
+     * @param string $uri
+     * @param mixed $controllerData
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
+    private function parse($method, $uri, $controllerData)
+    {
+        list($isStatic,$router) = $this->parseUri($uri);
+        $this->parseController($router, $controllerData);
+        $this->collection->addRoute($method, $router,$isStatic);
+    }
+
+    /**
+     * 解析控制器及方法
+     * @param \Core\Router\Router|array $router
+     * @param mixed $controllerData
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
+    private function parseController($router, $controllerData)
+    {
+        if (strpos($controllerData, '@') !== false) {
+            $data = explode('@', $controllerData);
+            $router->controller($data[0]);
+            $router->method($data[1]);
+            unset($data);
+        } else {
+            throw new InvalidArgumentException('路由配置未指定controller或method');
+        }
+    }
+
+    /**
+     * 解析URI转换成正则模式
+     * @param string $uri
+     * @return array
+     * Real programmers don't read comments, novices do
+     */
+    private function parseUri(string $uri)
     {
         if (!preg_match_all(self::Regex, $uri, $match, PREG_SET_ORDER |
             PREG_OFFSET_CAPTURE)) {
             return [
-                'regex' => $uri
+                true,
+                (new Router)->where($uri)
             ];
         }
         $offset = 0;
@@ -47,9 +94,18 @@ REGEX;
         if ($offset !== strlen($uri)) {
             $data[] = substr($uri, $offset);
         }
-        return $this->generator($data);
+        return [
+            false,
+            $this->generator($data)
+        ];
     }
 
+    /**
+     * 添加正则模式
+     * @param array $routes
+     * @return \Core\Router\Router
+     * Real programmers don't read comments, novices do
+     */
     private function generator(array $routes)
     {
         $regex  = '^';
@@ -67,48 +123,51 @@ REGEX;
         return $router;
     }
 
+    /**
+     * 添加get请求路由
+     * @param string $uri
+     * @param mixed $controllerData
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
     public function get(string $uri, $controllerData)
     {
-        $router = $this->parse($uri);
-        $this->parseController($router,$controllerData);
-        $this->collection->addRoute('GET', $router);
+        $this->parse('GET', $uri, $controllerData);
     }
 
+    /**
+     * 添加post请求路由
+     * @param string $uri
+     * @param mixed $controllerData
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
     public function post(string $uri, $controllerData)
     {
-        $router = $this->parse($uri);
-        $this->parseController($router, $controllerData);
-        $this->collection->addRoute('POST', $router);
+        $this->parse('POST', $uri, $controllerData);
     }
 
+    /**
+     * 添加delete请求路由
+     * @param string $uri
+     * @param mixed $controllerData
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
     public function delete(string $uri, $controllerData)
     {
-        $router = $this->parse($uri);
-        $this->parseController($router, $controllerData);
-        $this->collection->addRoute('DELETE', $router);
+        $this->parse('DELETE', $uri, $controllerData);
     }
 
+    /**
+     * 添加put请求路由
+     * @param string $uri
+     * @param mixed $controllerData
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
     public function put(string $uri, $controllerData)
     {
-        $router = $this->parse($uri);
-        $this->parseController($router, $controllerData);
-        $this->collection->addRoute('PUT', $router);
-    }
-
-    private function parseController(Router $router,$controllerData)
-    {
-        if (strpos($controllerData, '@') !== false) {
-            $data = explode('@', $controllerData);
-            $router->controller($data[0]);
-            $router->method($data[1]);
-            unset($data);
-        }else{
-            throw new InvalidArgumentException('路由配置未指定controller或method');
-        }
-    }
-
-    public function loader(string $path)
-    {
-        include $path;
+        $this->parse('PUT', $uri, $controllerData);
     }
 }

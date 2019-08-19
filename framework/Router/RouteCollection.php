@@ -8,6 +8,7 @@ class RouteCollection
 {
     private $routers = [];
 
+    private $static = [];
     /**
      * 添加合集
      * @param string $method
@@ -15,16 +16,15 @@ class RouteCollection
      * @return void
      * Real programmers don't read comments, novices do
      */
-    public function addRoute(string $method, Router $routeData)
+    public function addRoute(string $method, Router $routeData, bool $isStatic)
     {
-        $this->routers[$method][] = $routeData;
+        $this->{$isStatic ? 'static' : 'routers'}[$method][] = $routeData;
     }
 
 
     public function match(string $method, string $uri)
-    { 
-        foreach ($this->routers[$method] as $router) 
-        {
+    {
+        foreach ($this->routers[$method] as $router) {
             var_dump($router);
         }
     }

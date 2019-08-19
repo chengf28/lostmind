@@ -38,7 +38,11 @@ class Application extends Container
 
         // 加载服务
         $this->loadServerProvides();
+
+        return $this->make(\Core\Request\Request::class);
     }
+
+
 
     /**
      * 基础服务注册
@@ -47,12 +51,16 @@ class Application extends Container
      */
     protected function baseRegister()
     {
+        // 全局单例
+
+        $this->instances(\Core\Route\RouteCollection::class, new \Core\Route\RouteCollection);
+
         // 工具类别名注册
         foreach ([
-                // 文件操作系统
-                'file' => \Core\Filesystem\Filesystem::class,
-                'route' => \Core\Router\RouteGenerator::class,
-            ]
+            // 文件操作系统
+            'file' => \Core\Filesystem\Filesystem::class,
+            'route' => \Core\Router\RouteGenerator::class,
+        ]
             as $abstract => $concrete) {
             $this->bind($abstract, $concrete);
         }

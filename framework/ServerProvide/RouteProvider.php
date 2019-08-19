@@ -2,7 +2,7 @@
 
 namespace Core\ServerProvide;
 
-use Core\Router\RouteGenerator;
+use Core\Facade\Route;
 use Core\ServerProvide\ServerProvideAbstract;
 
 class RouteProvider extends ServerProvideAbstract
@@ -19,6 +19,6 @@ class RouteProvider extends ServerProvideAbstract
      */
     public function loader()
     {
-        $this->app->singleBind(RouteGenerator::class);
+        require __ROOT__.'routes/app.php';
     }
 }

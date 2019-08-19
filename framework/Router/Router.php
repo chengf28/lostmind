@@ -15,12 +15,13 @@ class Router
     /**
      * 添加正则公式
      * @param string $regex
-     * @return void
+     * @return \Core\Router\Router
      * Real programmers don't read comments, novices do
      */
     public function where(string $regex)
     {
         $this->regex = $regex;
+        return $this;
     }
 
     /**
@@ -36,12 +37,13 @@ class Router
     /**
      * 添加参数
      * @param mixed $param
-     * @return void
+     * @return \Core\Router\Router
      * Real programmers don't read comments, novices do
      */
     public function addParam($param)
     {
         $this->params[] = $param;
+        return $this;
     }
 
     /**
