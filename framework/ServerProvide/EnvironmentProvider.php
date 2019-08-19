@@ -2,7 +2,7 @@
 namespace Core\ServerProvide;
 use Core\ServerProvide\ServerProvideAbstract;
 
-class Environment extends ServerProvideAbstract
+class EnvironmentProvider extends ServerProvideAbstract
 {
 
     private $file;

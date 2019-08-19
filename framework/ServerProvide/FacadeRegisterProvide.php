@@ -3,7 +3,7 @@ namespace Core\ServerProvide;
 
 use Core\Facade\Facade;
 
-class FacadeRegister extends ServerProvideAbstract
+class FacadeRegisterProvide extends ServerProvideAbstract
 {
     /**
      * 抽象接口
