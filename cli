@@ -11,15 +11,14 @@
 
 $num       = $argc;
 $type      = $argv[1];
-$namepos   = strrpos($argv[2],'/');
-$namespace = substr($argv[2],0,$namepos);
-$name      = substr($argv[2],$namepos+1);
-$rootpath  = __DIR__.DIRECTORY_SEPARATOR.'framework';
-if(!file_exists($rootpath.DIRECTORY_SEPARATOR.$namespace))
-{
-    mkdir($rootpath.DIRECTORY_SEPARATOR.$namespace,0777,true);
+$namepos   = strrpos($argv[2], '/');
+$namespace = substr($argv[2], 0, $namepos);
+$name      = substr($argv[2], $namepos + 1);
+$rootpath  = __DIR__ . DIRECTORY_SEPARATOR . 'framework';
+if (!file_exists($rootpath . DIRECTORY_SEPARATOR . $namespace)) {
+    mkdir($rootpath . DIRECTORY_SEPARATOR . $namespace, 0777, true);
 }
-$content = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."stubs/$type.stub");
-$content = str_replace('REPLACENAMESPACE',$namespace,$content);
-$content = str_replace('REPLACECLASSNAME',$name,$content);
-file_put_contents($rootpath.DIRECTORY_SEPARATOR.$argv[2].'.php',$content);
+$content = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . "mould/$type.lm");
+$content = str_replace('REPLACENAMESPACE', $namespace, $content);
+$content = str_replace('REPLACECLASSNAME', $name, $content);
+file_put_contents($rootpath . DIRECTORY_SEPARATOR . $argv[2] . '.php', $content);
