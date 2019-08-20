@@ -2,73 +2,66 @@
 
 namespace Core\Router;
 
+
 class Router
 {
-    private $regex;
-
-    private $params;
-
+    private $uri;
+    
     private $controller;
 
     private $method;
 
-    /**
-     * 添加正则公式
-     * @param string $regex
-     * @return \Core\Router\Router
-     * Real programmers don't read comments, novices do
-     */
-    public function where(string $regex)
+    private $params;
+
+    public function __construct(string $uri = null)
     {
-        $this->regex = $regex;
+        if ($uri) 
+        {
+            $this->setUri($uri);
+        }
+    }
+
+    public function setUri(string $uri)
+    {
+        $this->uri = $uri;
         return $this;
     }
 
-    /**
-     * 获得正则
-     * @return void
-     * Real programmers don't read comments, novices do
-     */
+    public function where(string $params, string $regex)
+    {
+        // $this->uri = str_replace($params,$regex,$this->uri);
+        return $this;
+    }
+
     public function getRegex()
     {
-        return $this->regex;
+        var_dump(
+            array_column($this->params,'name')
+        );
+        // var_dump($this->uri);die;
+        
+        // $this->uri = str_replace(['(',')'],['{','}'],$this->uri);
+        // var_dump($this->uri);
+        die;
     }
 
-    /**
-     * 添加参数
-     * @param mixed $param
-     * @return \Core\Router\Router
-     * Real programmers don't read comments, novices do
-     */
-    public function addParam($param)
+    public function setParam(array $param)
     {
-        $this->params[] = $param;
-        return $this;
+        $this->params[]= $param;
     }
 
-    /**
-     * 添加控制器
-     * @param string $controller
-     * @return string
-     * Real programmers don't read comments, novices do
-     */
     public function controller(string $controller = null)
     {
-        if (!is_null($controller)) {
+        if ($controller) 
+        {
             $this->controller = $controller;
         }
         return $this->controller;
     }
 
-    /**
-     * 方法
-     * @param string $method
-     * @return string
-     * Real programmers don't read comments, novices do
-     */
     public function method(string $method = null)
     {
-        if (!is_null($method)) {
+        if ($method) {
             $this->method = $method;
         }
         return $this->method;

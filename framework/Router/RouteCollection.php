@@ -18,14 +18,28 @@ class RouteCollection
      */
     public function addRoute(string $method, Router $routeData, bool $isStatic)
     {
-        $this->{$isStatic ? 'static' : 'routers'}[$method][] = $routeData;
+        if ($isStatic) {
+            $this->static[$method][$routeData->getRegex()] = $routeData;
+        } else {
+            $this->routers[$method][] = $routeData;
+        }
+        // $this->{$isStatic ? 'static' : 'routers'}[$method][] = $routeData;
     }
 
 
     public function match(string $method, string $uri)
     {
         foreach ($this->routers[$method] as $router) {
-            var_dump($router);
+            if(!preg_match_all($router->getRegex(),$uri,$res))
+            {
+                continue;
+            }
+            var_dump($res,$router);
         }
+    }
+
+    public function staticMatch(string $method, string $uri)
+    {
+        return isset($this->static[$method][$uri]) ? $this->static[$method][$uri] : null;
     }
 }

@@ -43,7 +43,7 @@ class ExceptionHandler
      */
     public function ExcepHandler( \Throwable $e )
     {
-        var_dump($e->getMessage());
+        var_dump($e->getMessage() . ' in ' . $e->getFile() . ' at line #' . $e->getLine());
         var_dump($e->getTraceAsString());
     }
 

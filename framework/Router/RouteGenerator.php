@@ -10,12 +10,12 @@ use InvalidArgumentException;
 class RouteGenerator
 {
     const Regex = <<<REGEX
-@
+~
     # 匹配后面占位符
     \{
         ([A-Za-z_-]*)
     \}
-@x
+~x
 REGEX;
 
     private $collection;
@@ -43,6 +43,7 @@ REGEX;
         list($isStatic,$router) = $this->parseUri($uri);
         $this->parseController($router, $controllerData);
         $this->collection->addRoute($method, $router,$isStatic);
+        return $router;
     }
 
     /**
@@ -72,15 +73,16 @@ REGEX;
      */
     private function parseUri(string $uri)
     {
+        
         if (!preg_match_all(self::Regex, $uri, $match, PREG_SET_ORDER |
             PREG_OFFSET_CAPTURE)) {
             return [
                 true,
-                (new Router)->where($uri)
+                new Router($uri)
             ];
         }
         $offset = 0;
-        $data   = [];
+        $data = [];
         foreach ($match as $set) {
             if ($set[0][1] > $offset) {
                 $data[] = substr($uri, $offset, $set[0][1] - $offset);
@@ -90,9 +92,6 @@ REGEX;
                 '[A-Za-z_\-0-9]+'
             ];
             $offset = $set[0][1] + strlen($set[0][0]);
-        }
-        if ($offset !== strlen($uri)) {
-            $data[] = substr($uri, $offset);
         }
         return [
             false,
@@ -115,11 +114,14 @@ REGEX;
                 $regex .= $route;
                 continue;
             }
-            $router->addParam($route[0]);
-            $regex .= '(' . $route[1] . ')';
+            $router->setParam([
+                'name' => $route[0],
+                'regex' => $route[1]
+            ]);
+            $regex .= '(' . $route[0] . ')';
         }
         $regex .= '+?$';
-        $router->where($regex);
+        $router->setUri($regex);
         return $router;
     }
 
@@ -127,47 +129,47 @@ REGEX;
      * 添加get请求路由
      * @param string $uri
      * @param mixed $controllerData
-     * @return void
+     * @return \Core\Router\Router
      * Real programmers don't read comments, novices do
      */
     public function get(string $uri, $controllerData)
     {
-        $this->parse('GET', $uri, $controllerData);
+        return $this->parse('GET', $uri, $controllerData);
     }
 
     /**
      * 添加post请求路由
      * @param string $uri
      * @param mixed $controllerData
-     * @return void
+     * @return \Core\Router\Router
      * Real programmers don't read comments, novices do
      */
     public function post(string $uri, $controllerData)
     {
-        $this->parse('POST', $uri, $controllerData);
+        return $this->parse('POST', $uri, $controllerData);
     }
 
     /**
      * 添加delete请求路由
      * @param string $uri
      * @param mixed $controllerData
-     * @return void
+     * @return \Core\Router\Router
      * Real programmers don't read comments, novices do
      */
     public function delete(string $uri, $controllerData)
     {
-        $this->parse('DELETE', $uri, $controllerData);
+        return $this->parse('DELETE', $uri, $controllerData);
     }
 
     /**
      * 添加put请求路由
      * @param string $uri
      * @param mixed $controllerData
-     * @return void
+     * @return \Core\Router\Router
      * Real programmers don't read comments, novices do
      */
     public function put(string $uri, $controllerData)
     {
-        $this->parse('PUT', $uri, $controllerData);
+        return $this->parse('PUT', $uri, $controllerData);
     }
 }

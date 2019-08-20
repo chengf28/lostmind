@@ -28,7 +28,7 @@ class Application extends Container
 
     /**
      * 开始
-     * @return void
+     * @return \Core\Request\Request
      * IF I CAN GO DEATH, I WILL
      */
     public function start()
@@ -39,7 +39,7 @@ class Application extends Container
         // 加载服务
         $this->loadServerProvides();
 
-        return $this->make(\Core\Request\Request::class);
+        return $this->make('Request');
     }
 
 
@@ -52,13 +52,21 @@ class Application extends Container
     protected function baseRegister()
     {
         // 全局单例
+        foreach ([
+            \Core\Route\RouteCollection::class => \Core\Route\RouteCollection::class,
+            // 请求
+            'Request' => \Core\Request\Request::class,
+        ]
+            as $abstract => $concrete) {
+            $this->singleBind($abstract, $concrete);
+        }
 
-        $this->instances(\Core\Route\RouteCollection::class, new \Core\Route\RouteCollection);
 
         // 工具类别名注册
         foreach ([
             // 文件操作系统
             'file' => \Core\Filesystem\Filesystem::class,
+            // 路由构建
             'route' => \Core\Router\RouteGenerator::class,
         ]
             as $abstract => $concrete) {

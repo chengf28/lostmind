@@ -109,8 +109,11 @@ class Container implements \ArrayAccess
         if (count($this->withs)) {
             array_pop($this->withs);
         }
+        /**
+         * 如果是singleBind 则第一次实例化后存instances中
+         */
         if ($this->isSingle($abstract)) {
-            $this->instances[$abstract] = $concrete;
+            $this->instances[$abstract] = $object;
         }
         // 返回实例化好的对象
         return $object;
