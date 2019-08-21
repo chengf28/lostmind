@@ -19,8 +19,9 @@ class Application extends Container
     public function __construct(string $path)
     {
         $this->rootPath = trim($path, '\\') . DIRECTORY_SEPARATOR;
-        // 注册自己
-        $this->bind('app', $this);
+        // 存入实例
+        $this->bind('app',Application::class);
+        $this->instances(Application::class,$this);
         $this->instances('app.rootPath', $this->rootPath);
         $this->instances('app.envPath', $this->rootPath);
         $this->instances('app.configPath', $this->rootPath . 'config' . DIRECTORY_SEPARATOR);

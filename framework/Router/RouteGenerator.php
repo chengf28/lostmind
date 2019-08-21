@@ -41,7 +41,8 @@ REGEX;
     private function parse($method, $uri, $controllerData)
     {
         list($isStatic,$router) = $this->parseUri($uri);
-        $this->parseController($router, $controllerData);
+        // $this->parseController($router, $controllerData);
+        $router->controller($controllerData);
         $this->collection->addRoute($method, $router,$isStatic);
         return $router;
     }
@@ -51,6 +52,7 @@ REGEX;
      * @param \Core\Router\Router|array $router
      * @param mixed $controllerData
      * @return void
+     * @throws \InvalidArgumentException
      * Real programmers don't read comments, novices do
      */
     private function parseController($router, $controllerData)

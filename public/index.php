@@ -1,5 +1,4 @@
 <?php
-
 // 设置项目根路径
 defined("__ROOT__") or define("__ROOT__", dirname(__DIR__) . DIRECTORY_SEPARATOR);
 

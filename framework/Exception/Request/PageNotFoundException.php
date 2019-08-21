@@ -7,11 +7,6 @@ class PageNotFoundException extends ErrorException
 {
     public function __construct(string $page)
     {
-        parent::__construct("The Page $page Is Not Found",404);
-    }
-
-    public function getHtml()
-    {
-        return "Page Not Found";
+        parent::__construct("`$page` is not found",404);
     }
 }
