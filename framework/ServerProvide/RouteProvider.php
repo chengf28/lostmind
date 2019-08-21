@@ -17,8 +17,9 @@ class RouteProvider extends ServerProvideAbstract
      * @return void
      * Real programmers don't read comments, novices do
      */
-    public function loader()
+    protected function loader()
     {
-        require __ROOT__.'routes/app.php';
+        require __ROOT__ . 'routes/web.php';
     }
+
 }
