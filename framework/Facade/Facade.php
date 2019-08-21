@@ -2,7 +2,7 @@
 
 namespace Core\Facade;
 
-use Core\Facade\FacadeException;
+use Core\Exception\Facade\FacadeException;
 
 
 abstract class Facade

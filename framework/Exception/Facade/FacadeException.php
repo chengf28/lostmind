@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Facade;
+namespace Core\Exception\Facade;
 
 use RuntimeException;
 

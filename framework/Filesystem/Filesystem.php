@@ -1,8 +1,9 @@
 <?php
 namespace Core\Filesystem;
 
-use Core\Filesystem\FilesystemInterface;
-use Core\Filesystem\FileNotFoundException;
+use Core\Exception\Filesystem\FileExistsException;
+use Core\Exception\Filesystem\FileNotFoundException;
+
 
 /**
  * 文件操作系统
