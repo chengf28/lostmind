@@ -5,8 +5,6 @@ namespace Core\Router;
 use Core\Router\Router;
 use Core\Facade\Route;
 
-use InvalidArgumentException;
-
 class RouteGenerator
 {
     const Regex = <<<REGEX
@@ -18,7 +16,7 @@ class RouteGenerator
 ~x
 REGEX;
 
-    private $collection;
+    protected $collection;
 
     /**
      * 构建函数,依赖注入
@@ -38,7 +36,7 @@ REGEX;
      * @return void
      * Real programmers don't read comments, novices do
      */
-    private function parse($method, $uri, $controllerData)
+    protected function parse($method, $uri, $controllerData)
     {
         $uri = '/'.ltrim($uri,'/');
 
@@ -50,32 +48,12 @@ REGEX;
     }
 
     /**
-     * 解析控制器及方法
-     * @param \Core\Router\Router|array $router
-     * @param mixed $controllerData
-     * @return void
-     * @throws \InvalidArgumentException
-     * Real programmers don't read comments, novices do
-     */
-    private function parseController($router, $controllerData)
-    {
-        if (strpos($controllerData, '@') !== false) {
-            $data = explode('@', $controllerData);
-            $router->controller($data[0]);
-            $router->method($data[1]);
-            unset($data);
-        } else {
-            throw new InvalidArgumentException('路由配置未指定controller或method');
-        }
-    }
-
-    /**
      * 解析URI转换成正则模式
      * @param string $uri
      * @return array
      * Real programmers don't read comments, novices do
      */
-    private function parseUri(string $uri)
+    protected function parseUri(string $uri)
     {
         
         if (!preg_match_all(self::Regex, $uri, $match, PREG_SET_ORDER |
@@ -109,7 +87,7 @@ REGEX;
      * @return \Core\Router\Router
      * Real programmers don't read comments, novices do
      */
-    private function generator(array $routes)
+    protected function generator(array $routes)
     {
         $regex  = '^';
         $router = new Router;
