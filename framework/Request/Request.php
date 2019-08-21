@@ -21,7 +21,7 @@ class Request
     {
         $this->app    = $app;
         $this->routes = $routeCollection;
-        $this->uri    = trim($_SERVER['REQUEST_URI'], '/');
+        $this->uri    = $_SERVER['REQUEST_URI'];
         $this->method = $_SERVER['REQUEST_METHOD'];
     }
 

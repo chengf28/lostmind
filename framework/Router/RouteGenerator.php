@@ -40,6 +40,8 @@ REGEX;
      */
     private function parse($method, $uri, $controllerData)
     {
+        $uri = '/'.ltrim($uri,'/');
+
         list($isStatic,$router) = $this->parseUri($uri);
         // $this->parseController($router, $controllerData);
         $router->controller($controllerData);
