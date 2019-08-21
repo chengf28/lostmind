@@ -18,7 +18,7 @@
             "framework"
         ],
         "psr-4": {
-            "Test\\":"test/"
+            "App\\":"app/"
         }
     }
 }
