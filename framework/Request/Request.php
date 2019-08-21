@@ -17,12 +17,15 @@ class Request
 
     protected $app;
 
+    protected $namespace;
+
     public function __construct(\Core\Application $app, RouteCollection $routeCollection)
     {
         $this->app    = $app;
         $this->routes = $routeCollection;
         $this->uri    = $_SERVER['REQUEST_URI'];
         $this->method = $_SERVER['REQUEST_METHOD'];
+        $this->namespace = 'App\Controllers\\';
     }
 
     /**
@@ -47,23 +50,23 @@ class Request
             throw new RouteArgumentException;
         }
         list($controller, $method) = explode('@', $controllerData);
-        $controller = 'App\Controllers\\' . $controller;
+        $controller = $this->namespace . $controller;
         $class = new ReflectionMethod($controller, $method);
         $with = [];
+        /**
+         * 获取到该方法是否需要参数
+         */
         foreach ($class->getParameters() as $param) {
-            if($argClass = $param->getClass())
-            {
-                if($argClassWith = $route->getParams($argClass->name))
-                {
-                    $with[] = $this->app->makeWith($argClass->name,(array)$argClassWith);
-                }else{
-                    $with[] = $this->app->make($argClass->name);
-                }
-            }else{
+            // 获取参数类型是否为一个Class
+            if ($argClass = $param->getClass()) {
+                // 如果有class类型的参数,且在uri中带有参数值,则带有参数的去实例化,否则直接获取实例
+                $with[] = $this->app->makeWith($argClass->name, (array) $route->getParams($argClass->name));
+            } else {
+                // 如果不是class 这直接将参数放入with中
                 $with[] = $route->getParams($param->name);
             }
-            
         }
-        $class->invokeArgs($this->app[$controller],$with);
+        // invoke该方法
+        $class->invokeArgs($this->app[$controller], $with);
     }
 }
