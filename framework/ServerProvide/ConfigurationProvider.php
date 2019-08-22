@@ -1,5 +1,7 @@
 <?php
+
 namespace Core\ServerProvide;
+
 use Core\ServerProvide\ServerProvideAbstract;
 
 class ConfigurationProvider extends ServerProvideAbstract
@@ -15,6 +17,12 @@ class ConfigurationProvider extends ServerProvideAbstract
     {
         $this->file = $this->app['file'];
         $this->getConfig();
+
+        $basconfig = $this->app->getConfig('base');
+        $this->app->setConfig('AppName',$basconfig['name']);
+
+        date_default_timezone_set($basconfig['timezone']);
+
     }
 
     /**
@@ -24,9 +32,11 @@ class ConfigurationProvider extends ServerProvideAbstract
      */
     public function getConfig()
     {
-        foreach (glob($this->app['app.configPath'].'*.php') as $file)
-        {
-            $this->app->setConfig(basename($file,'.php'),include $file);
+        foreach (glob($this->app['app.configPath'] . '*.php') as $file) {
+            $this->app->setConfig(
+                basename($file, '.php'), 
+                include $file
+            );
         }
     }
 }

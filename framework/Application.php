@@ -133,7 +133,7 @@ class Application extends Container
      */
     public function getConfig(string $key = null)
     {
-        if (is_null($key)) {
+        if (!$key) {
             return $this->config;
         }
 

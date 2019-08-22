@@ -9,6 +9,6 @@ require_once __ROOT__.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload
 
 $app = new Application(__ROOT__);
 // 错误与异常处理注册
-$app->instances('ExcepthonHandler', new Core\Exception\ExceptionHandler);
+$app->instances('ExcepthonHandler', new Core\Exception\ExceptionHandler($app));
 // 开始
 $app->start()->send();
