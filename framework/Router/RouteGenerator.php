@@ -38,12 +38,12 @@ REGEX;
      */
     protected function parse($method, $uri, $controllerData)
     {
-        $uri = '/'.ltrim($uri,'/');
+        $uri = '/' . ltrim($uri, '/');
 
-        list($isStatic,$router) = $this->parseUri($uri);
+        list($isStatic, $router) = $this->parseUri($uri);
         // $this->parseController($router, $controllerData);
         $router->controller($controllerData);
-        $this->collection->addRoute($method, $router,$isStatic);
+        $this->collection->addRoute([$method], $router, $isStatic);
         return $router;
     }
 
@@ -55,7 +55,7 @@ REGEX;
      */
     protected function parseUri(string $uri)
     {
-        
+
         if (!preg_match_all(self::Regex, $uri, $match, PREG_SET_ORDER |
             PREG_OFFSET_CAPTURE)) {
             return [

@@ -2,6 +2,7 @@
 
 namespace Core\Route;
 
+use Core\Exception\Request\MethodNotAllow;
 use Core\Router\Router;
 
 class RouteCollection
@@ -11,17 +12,17 @@ class RouteCollection
     private $static = [];
     /**
      * 添加合集
-     * @param string $method
+     * @param array $method
      * @param \Core\Router\Router $routeData
      * @return void
      * Real programmers don't read comments, novices do
      */
-    public function addRoute(string $method, Router $routeData, bool $isStatic)
+    public function addRoute(array $method, Router $routeData, bool $isStatic)
     {
         if ($isStatic) {
-            $this->static[$method][$routeData->getUri()] = $routeData;
+            $this->static[$routeData->getUri()] = [$routeData,$method] ;
         } else {
-            $this->routers[$method][] = $routeData;
+            $this->routers[] = [$routeData, $method];
         }
     }
 
@@ -34,13 +35,15 @@ class RouteCollection
      */
     public function match(string $method, string $uri)
     {
-        if(!isset($this->routers[$method]))
-        {
-            return null;
-        }
-        foreach ($this->routers[$method] as $router) {
+        
+        foreach ($this->routers as $data) {
+            $router = $data[0];
             if (!preg_match_all('~' . $router->getRegex() . '~x', $uri, $match)) {
                 continue;
+            }
+            if (!in_array($method,$data[1])) 
+            {
+                throw new MethodNotAllow($method);
             }
             unset($match[0]);
             $router->setParamValue(array_column($match, '0'));
@@ -57,6 +60,15 @@ class RouteCollection
      */
     public function staticMatch(string $method, string $uri)
     {
-        return isset($this->static[$method][$uri]) ? $this->static[$method][$uri] : null;
+        if(!isset($this->static[$uri]))
+        {
+            return null;
+        }
+        $data = $this->static[$uri];
+        if (!in_array($method, $data[1])) {
+            throw new MethodNotAllow($method);
+        }
+        return $data[0];
+        // return isset($this->static[$method][$uri]) ? $this->static[$method][$uri] : null;
     }
 }

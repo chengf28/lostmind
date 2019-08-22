@@ -8,6 +8,12 @@ return [
     'name'         => 'LostMind',
 
     /**
+     * 是否为DEBUG模式
+     * debug mode
+     */
+    'debug'        => false,
+
+    /**
      * 时区 
      * Time Zone
      */

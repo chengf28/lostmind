@@ -47,18 +47,28 @@ class ExceptionHandler
      */
     public function ExcepHandler( \Throwable $e )
     {
-            
-        $exceptionName = get_class($e);
-        $msg           = htmlentities($e->getMessage());
-        $stack         = '';
-        foreach ($e->getTrace() as $key => $value) 
+        
+
+        if ($this->app->getConfig('base.debug')) 
         {
-            $stack .= "<p>#{$key} {$value['file']}({$value['line']}):";
-            if (isset($value['class'])) 
+            $exceptionName = get_class($e) . ':';
+            $msg           = htmlentities($e->getMessage());
+            $stack         = 'Stack :';
+            $position      = "At : <b>{$e->getFile()} Line # {$e->getLine()}</b>";
+            foreach ($e->getTrace() as $key => $value) 
             {
-                $stack .= $value['class'] . $value['type'];
+                $stack .= "<p>#{$key} {$value['file']}({$value['line']}):";
+                if (isset($value['class'])) 
+                {
+                    $stack .= $value['class'] . $value['type'];
+                }
+                $stack .= $value['function'] . '(' . implode(',',$value['args']) . ')</p>';
             }
-            $stack .= $value['function'] . '(' . implode(',',$value['args']) . ')</p>';
+        }else{
+            $msg           = 'Some thing error';
+            $exceptionName = '';
+            $stack         = '';
+            $position      = '';
         }
         echo <<<HTML
         <!DOCTYPE html>
@@ -126,12 +136,12 @@ class ExceptionHandler
         <div id="content">
             
             <div id="error">
-                <b><h3>{$exceptionName} :</h3></b>
+                <b><h3>{$exceptionName}</h3></b>
                 <p>$msg</p>
-                At : <b>{$e->getFile()} Line # {$e->getLine()}</b>
+                $position
             </div>
             <div id="stack">
-                Stack :
+                
                 {$stack}
             </div>
         </div>
