@@ -46,9 +46,8 @@ REGEX;
         $uri = '/' . ltrim($uri, '/');
 
         list($isStatic, $router) = $this->parseUri($uri);
-        // $this->parseController($router, $controllerData);
         $router->controller($controllerData);
-        $this->collection->addRoute([$method], $router, $isStatic);
+        $this->collection->addRoute($router, $isStatic,$method);
         return $router;
     }
 
@@ -82,6 +81,7 @@ REGEX;
             $offset = $set[0][1] + strlen($set[0][0]);
         }
         $regex .= '+?$';
+
         return [
             false,
             $router->setUri($regex)

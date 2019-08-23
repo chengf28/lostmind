@@ -16,7 +16,8 @@ class Router
 
     protected $regex;
 
-    
+    protected $methods;
+
     public function __construct(string $uri = null)
     {
         if ($uri) {
@@ -90,7 +91,7 @@ class Router
      */
     public function setParamValue(array $value)
     {
-        $this->params = array_combine($this->params,$value);
+        $this->params = array_combine($this->params, $value);
         return $this;
     }
 
@@ -103,9 +104,9 @@ class Router
     public function getParams($key = null)
     {
         if ($key) {
-            return isset($this->params[$key]) ? $this->params[$key]: null;
+            return isset($this->params[$key]) ? $this->params[$key] : null;
         }
-        return $this->params?:[];
+        return $this->params ?: [];
     }
 
     /**

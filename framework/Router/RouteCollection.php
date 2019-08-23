@@ -17,17 +17,19 @@ class RouteCollection
     private $static = [];
     /**
      * 添加合集
-     * @param array $method
      * @param \Core\Router\Router $routeData
      * @return void
      * Real programmers don't read comments, novices do
      */
-    public function addRoute(array $method, Router $routeData, bool $isStatic)
+    public function addRoute(Router $routeData, bool $isStatic, string $method)
     {
         if ($isStatic) {
-            $this->static[$routeData->getUri()] = [$routeData,$method] ;
+            if (isset($this->static[$routeData->getUri()])) {
+                $static = $this->static[$routeData->getUri()];
+            }
+            $this->static[$routeData->getUri()] = $routeData;
         } else {
-            $this->routers[] = [$routeData, $method];
+            $this->routers[] = $routeData;
         }
     }
 
@@ -40,14 +42,13 @@ class RouteCollection
      */
     public function match(string $method, string $uri)
     {
-        
+
         foreach ($this->routers as $data) {
             $router = $data[0];
             if (!preg_match_all('~' . $router->getRegex() . '~x', $uri, $match)) {
                 continue;
             }
-            if (!in_array($method,$data[1])) 
-            {
+            if (!in_array($method, $data[1])) {
                 throw new MethodNotAllow($method);
             }
             unset($match[0]);
@@ -65,8 +66,7 @@ class RouteCollection
      */
     public function staticMatch(string $method, string $uri)
     {
-        if(!isset($this->static[$uri]))
-        {
+        if (!isset($this->static[$uri])) {
             return null;
         }
         $data = $this->static[$uri];

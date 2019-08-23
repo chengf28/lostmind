@@ -138,4 +138,14 @@ class Request implements \ArrayAccess, \Iterator
     {
         return key($this->RequestParams);
     }
+
+    public function method()
+    {
+        return $this->method;
+    }
+
+    public function has($name)
+    {
+        return $this->offsetExists($name);
+    }
 }
