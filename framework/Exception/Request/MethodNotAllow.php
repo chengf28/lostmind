@@ -2,12 +2,17 @@
 
 namespace Core\Exception\Request;
 
-use ErrorException;
+use RuntimeException;
 
-class MethodNotAllow extends ErrorException
+/**
+ * Request请求方式异常
+ * @author chengf28 <chengf_28@163.com>
+ * Real programmers don't read comments, novices do
+ */
+class MethodNotAllow extends RuntimeException
 {
     public function __construct($method)
     {
-        parent::__construct("the $method method is not allow");
+        parent::__construct("The $method method is not allow");
     }   
 }

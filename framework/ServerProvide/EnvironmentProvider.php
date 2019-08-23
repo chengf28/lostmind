@@ -2,6 +2,11 @@
 namespace Core\ServerProvide;
 use Core\ServerProvide\ServerProvideAbstract;
 
+/**
+ * 环境文件加载服务
+ * @author chengf28 <chengf_28@163.com>
+ * Real programmers don't read comments, novices do
+ */
 class EnvironmentProvider extends ServerProvideAbstract
 {
 

@@ -5,6 +5,11 @@ namespace Core\Route;
 use Core\Exception\Request\MethodNotAllow;
 use Core\Router\Router;
 
+/**
+ * 路由集合类
+ * @author chengf28 <chengf_28@163.com>
+ * Real programmers don't read comments, novices do
+ */
 class RouteCollection
 {
     private $routers = [];

@@ -2,6 +2,11 @@
 namespace Core\ServerProvide;
 use Core\ServerProvide\ServerProvideInterface as SPInterface;
 
+/**
+ * 服务提供基类
+ * @author chengf28 <chengf_28@163.com>
+ * Real programmers don't read comments, novices do
+ */
 abstract class ServerProvideAbstract implements SPInterface
 {
     /**

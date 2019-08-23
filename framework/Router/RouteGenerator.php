@@ -5,6 +5,11 @@ namespace Core\Router;
 use Core\Router\Router;
 use Core\Facade\Route;
 
+/**
+ * 路由构建类
+ * @author chengf28 <chengf_28@163.com>
+ * Real programmers don't read comments, novices do
+ */
 class RouteGenerator
 {
     const Regex = <<<REGEX

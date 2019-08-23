@@ -4,6 +4,11 @@ namespace Core\ServerProvide;
 
 use Core\ServerProvide\ServerProvideAbstract;
 
+/**
+ * 配置信息加载服务
+ * @author chengf28 <chengf_28@163.com>
+ * Real programmers don't read comments, novices do
+ */
 class ConfigurationProvider extends ServerProvideAbstract
 {
     private $file;

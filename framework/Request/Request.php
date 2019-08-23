@@ -42,7 +42,8 @@ class Request
             // 有参数类型匹配路由
             $route = $this->routes->match($this->method, $this->uri);
             if (!$route) {
-                throw new PageNotFoundException($this->uri);
+                // 抛出异常
+                throw new PageNotFoundException();
             }
         }
         $controllerData = $route->controller();

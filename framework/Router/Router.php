@@ -2,7 +2,10 @@
 
 namespace Core\Router;
 
-
+/**
+ * 单条路由处理
+ * Real programmers don't read comments, novices do
+ */
 class Router
 {
     protected $uri;

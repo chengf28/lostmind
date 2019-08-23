@@ -47,8 +47,6 @@ class ExceptionHandler
      */
     public function ExcepHandler( \Throwable $e )
     {
-        
-
         if ($this->app->getConfig('base.debug')) 
         {
             $exceptionName = get_class($e) . ':';
@@ -57,13 +55,15 @@ class ExceptionHandler
             $position      = "At : <b>{$e->getFile()} Line # {$e->getLine()}</b>";
             foreach ($e->getTrace() as $key => $value) 
             {
-                $stack .= "<p>#{$key} {$value['file']}({$value['line']}):";
+                $stack .= "<p>#{$key} {$value['file']}({$value['line']}):<span>";
                 if (isset($value['class'])) 
                 {
                     $stack .= $value['class'] . $value['type'];
                 }
-                $stack .= $value['function'] . '(' . implode(',',$value['args']) . ')</p>';
+                $stack .= $value['function'] . '(' . implode(',',$value['args']) . ')</span></p>';
             }
+            $key     = $key + 1;
+            $stack  .= "<p>#{$key} {main}</p>";
         }else{
             $msg           = 'Some thing error';
             $exceptionName = '';
@@ -95,7 +95,7 @@ class ExceptionHandler
                 line-height: 6rem;
                 width: 100%;
                 text-align: center;
-                background: #ff6c6c;
+                background: #677470;
                 color: #fff;
             }
             #content{
@@ -109,35 +109,34 @@ class ExceptionHandler
                 box-sizing: border-box;
                 word-break: break-word;                
             }
-            #content #error
+            #error
             {
-                box-shadow: 3px 0 3px rgba(0, 0, 0, .2),0 3px 3px rgba(0, 0, 0, .2);
                 padding   : 3rem;
-                margin    : 1rem;
-                width     : 50%;
+                box-sizing:border-box;
+                width     : 100%;
+                background: #ad5d54;
             }
-            #content #error p
+            #error p
             {
                 text-align: center;
                 font-size: 1.5rem;
-                color: #cc5757;
+                color: #fff;
                 margin: 1rem 0;
             }
-
             #content #stack p{
                 margin: 1rem 0;
             }
+            #content #stack p span{
+                color:#ad5d54;
+            }
         </style>
         <body>
-
-        <h1>
-            {$this->app->getConfig('AppName')}
-        </h1>
         <div id="content">
-            
             <div id="error">
-                <b><h3>{$exceptionName}</h3></b>
-                <p>$msg</p>
+                <b>{$exceptionName}</b>
+                <p>
+                    $msg
+                </p>
                 $position
             </div>
             <div id="stack">

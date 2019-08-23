@@ -5,6 +5,11 @@ namespace Core\Facade;
 use Core\Exception\Facade\FacadeException;
 
 
+/**
+ * 外观模式基类
+ * @author chengf28 <chengf_28@163.com>
+ * Real programmers don't read comments, novices do
+ */
 abstract class Facade
 {
     /**

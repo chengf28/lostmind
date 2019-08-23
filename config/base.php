@@ -11,7 +11,7 @@ return [
      * 是否为DEBUG模式
      * debug mode
      */
-    'debug'        => false,
+    'debug'        => true,
 
     /**
      * 时区 

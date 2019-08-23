@@ -3,6 +3,10 @@ namespace Core\ServerProvide;
 
 use Core\Facade\Facade;
 
+/***
+ * 门面模式注册服务器
+ * @author chengf28 <chengf_28@163.com>
+ */
 class FacadeRegisterProvide extends ServerProvideAbstract
 {
     /**
