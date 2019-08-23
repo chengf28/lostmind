@@ -60,56 +60,32 @@ REGEX;
      */
     protected function parseUri(string $uri)
     {
-
+        $router = new Router;
         if (!preg_match_all(self::Regex, $uri, $match, PREG_SET_ORDER |
             PREG_OFFSET_CAPTURE)) {
             return [
                 true,
-                new Router($uri)
+                $router->setUri($uri)
             ];
         }
         $offset = 0;
-        $data = [];
+        $regex  = '';
         foreach ($match as $set) {
             if ($set[0][1] > $offset) {
-                $data[] = substr($uri, $offset, $set[0][1] - $offset);
-            }
-            $data[] = [
-                $set[1][0],
-                '[A-Za-z_\-0-9]+'
-            ];
-            $offset = $set[0][1] + strlen($set[0][0]);
-        }
-        return [
-            false,
-            $this->generator($data)
-        ];
-    }
-
-    /**
-     * 添加正则模式
-     * @param array $routes
-     * @return \Core\Router\Router
-     * Real programmers don't read comments, novices do
-     */
-    protected function generator(array $routes)
-    {
-        $regex  = '^';
-        $router = new Router;
-        foreach ($routes as $route) {
-            if (is_string($route)) {
-                $regex .= $route;
-                continue;
+                $regex .= substr($uri, $offset, $set[0][1] - $offset);
             }
             $router->setParam([
-                'name' => $route[0],
-                'regex' => $route[1]
+                'name' => $set[1][0],
+                'regex' => '[A-Za-z_\-0-9]+'
             ]);
-            $regex .= '(' . $route[0] . ')';
+            $regex .= '(' . $set[1][0] . ')';
+            $offset = $set[0][1] + strlen($set[0][0]);
         }
         $regex .= '+?$';
-        $router->setUri($regex);
-        return $router;
+        return [
+            false,
+            $router->setUri($regex)
+        ];
     }
 
     /**
