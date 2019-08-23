@@ -7,7 +7,7 @@ use Core\Exception\Request\PageNotFoundException;
 use Core\Exception\Request\RouteArgumentException;
 use ReflectionMethod;
 
-class Request
+class Request implements \ArrayAccess, \Iterator
 {
     protected $method;
 
@@ -19,13 +19,25 @@ class Request
 
     protected $namespace;
 
+    protected $RequestParams;
+
     public function __construct(\Core\Application $app, RouteCollection $routeCollection)
     {
-        $this->app    = $app;
-        $this->routes = $routeCollection;
-        $this->uri    = $_SERVER['REQUEST_URI'];
-        $this->method = $_SERVER['REQUEST_METHOD'];
+        $this->app       = $app;
+        $this->routes    = $routeCollection;
+        $this->uri       = $_SERVER['SCRIPT_NAME'];
+        $this->method    = $_SERVER['REQUEST_METHOD'];
         $this->namespace = 'App\Controllers\\';
+        $args            = $_REQUEST;
+        if (empty($args))
+        {
+            $raw  = file_get_contents('php://input');
+            if (!empty($raw)) 
+            {
+                $args = (array)$raw;
+            }
+        }
+        $this->RequestParams = $args;
     }
 
     /**
@@ -51,9 +63,9 @@ class Request
             throw new RouteArgumentException;
         }
         list($controller, $method) = explode('@', $controllerData);
-        $controller = $this->namespace . $controller;
-        $class = new ReflectionMethod($controller, $method);
-        $with = [];
+        $controller                = $this->namespace . $controller;
+        $class                     = new ReflectionMethod($controller, $method);
+        $with                      = [];
         /**
          * 获取到该方法是否需要参数
          */
@@ -69,5 +81,60 @@ class Request
         }
         // invoke该方法
         $class->invokeArgs($this->app[$controller], $with);
+    }
+
+    public function all()
+    {
+        return $this->RequestParams;
+    }
+
+    public function __get($name)
+    {
+        return isset($this->RequestParams[$name]) ? $this->RequestParams[$name] : null;
+    }
+
+    public function offsetExists($offset)
+    {
+        return isset($offset, $this->RequestParams);
+    }
+
+    public function offsetGet($offset)
+    {
+        return $this->__get($offset);
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        $this->RequestParams[$offset] = $value;
+    }
+
+    public function offsetUnset($offset)
+    {
+        unset($this->RequestParams[$offset]);
+    }
+
+    public function current()
+    {
+        return current($this->RequestParams);
+    }
+
+    public function next()
+    {
+        return next($this->RequestParams);
+    }
+
+    public function rewind()
+    {
+        return reset($this->RequestParams);
+    }
+
+    public function valid()
+    {
+        return !is_null(key($this->RequestParams)) ? true : false;
+    }
+
+    public function key()
+    {
+        return key($this->RequestParams);
     }
 }
