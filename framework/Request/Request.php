@@ -2,6 +2,7 @@
 
 namespace Core\Request;
 
+use Core\Application;
 use Core\Route\RouteCollection;
 use Core\Exception\Request\PageNotFoundException;
 use Core\Exception\Request\RouteArgumentException;
@@ -21,7 +22,7 @@ class Request implements \ArrayAccess, \Iterator
 
     protected $RequestParams;
 
-    public function __construct(\Core\Application $app, RouteCollection $routeCollection)
+    public function __construct(Application $app, RouteCollection $routeCollection)
     {
         $this->app       = $app;
         $this->routes    = $routeCollection;
