@@ -91,31 +91,38 @@ class Container implements \ArrayAccess
         if (!empty($parameters)) {
             $this->withs[] = $parameters;
         }
+        /**
+         * 从短名中获取到对应真正的类名
+         */ 
+        $concrete = $this->getConcrete($abstract);
 
-
-        // 查看是否已经在实例化的
+        /**
+         * 查看是否已经在实例化的
+         */
         if ($this->isInstance($abstract)) {
             return $this->getInstance($abstract);
         }
-
-        // 取得具体
-        $concrete = $this->getConcrete($abstract);
         if ($this->isBuildable($abstract, $concrete)) {
             // 满足构建条件,构建(实例化)该类
             $object = $this->build($concrete);
         } else {
             $object = $this->makeWith($concrete);
         }
-        // 如果有参数,则出栈
+        
+        /**
+         * 如果有参数,则将参数出栈
+         */
         if (count($this->withs)) {
             array_pop($this->withs);
         }
+
         /**
          * 如果是singleBind 则第一次实例化后存instances中
          */
         if ($this->isSingle($abstract)) {
-            $this->instances[$abstract] = $object;
+            $this->instances[$concrete] = $object;
         }
+        
         // 返回实例化好的对象
         return $object;
     }
