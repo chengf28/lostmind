@@ -1,5 +1,5 @@
 # The LostMind
 > A Simple PHP Framework
 
-> Respect My Fucking Fife
+> Respect My Fucking Life
 ---
