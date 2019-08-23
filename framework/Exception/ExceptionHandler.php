@@ -1,7 +1,9 @@
 <?php
+
 namespace Core\Exception;
 
 use Core\Application;
+use Core\Exception\FatalErrorException;
 
 /**
  * 异常处理
@@ -17,10 +19,12 @@ class ExceptionHandler
      */
     public function __construct(Application $app)
     {
+        // error_reporting(0);
         // 设置自定义错误处理
-        set_error_handler([$this,'ErrorHandler']);
+        set_error_handler([$this, 'ErrorHandler']);
         // 设置自定义异常处理
-        set_exception_handler([$this,'ExcepHandler']);
+        set_exception_handler([$this, 'ExcepHandler']);
+        // register_shutdown_function([$this, 'ShudownHandler']);
         $this->app  = $app;
     }
 
@@ -33,10 +37,19 @@ class ExceptionHandler
      * @return void
      * If I can go death, I will
      */
-    public function ErrorHandler( int $errno , string $errstr , string $errfile , string $errline )
+    public function ErrorHandler(int $errno, string $errstr, string $errfile, string $errline)
     {
         // 将错误转成错误异常抛出
-        throw new \ErrorException($errstr,$errno,$errno,$errfile,$errline);
+        throw new \ErrorException($errstr, $errno, $errno, $errfile, $errline);
+    }
+
+    public function ShudownHandler()
+    {
+        $error = error_get_last();
+        if ($error && $error['type'] === E_ERROR){
+            $excep = new FatalErrorException($error['message'],0,1,$error['file'],$error['line']);
+            $this->ExcepHandler($excep);
+        }
     }
 
     /**
@@ -45,26 +58,43 @@ class ExceptionHandler
      * @return void
      * If I can go death, I will
      */
-    public function ExcepHandler( \Throwable $e )
+    public function ExcepHandler(\Throwable $e)
     {
-        if ($this->app->getConfig('base.debug')) 
-        {
+        
+        if ($this->app->getConfig('base.debug')) {
             $exceptionName = get_class($e) . ':';
             $msg           = htmlentities($e->getMessage());
             $stack         = 'Stack :';
             $position      = "At : <b>{$e->getFile()} Line # {$e->getLine()}</b>";
-            foreach ($e->getTrace() as $key => $value) 
-            {
-                $stack .= "<p>#{$key} {$value['file']}({$value['line']}):<span>";
-                if (isset($value['class'])) 
-                {
+            foreach ($e->getTrace() as $key => $value) {
+                $stack .= "<p>#{$key} ";
+                if (isset($value['file'])) {
+                    $stack .= "{$value['file']}({$value['line']}):<span>";
+                }
+                if (isset($value['class'])) {
                     $stack .= $value['class'] . $value['type'];
                 }
-                $stack .= $value['function'] . '(' . implode(',',$value['args']) . ')</span></p>';
+                $stack .= $value['function'] . '(';
+                if (isset($value['args'])) 
+                {
+                    foreach ($value['args'] as $args) 
+                    {
+                        if (is_array($args)) {
+                          $args = str_replace(['{','}',':'],['[',']','=>'],json_encode($args));
+                        }
+                        if (is_object($args)) 
+                        {
+                            $args = get_class($args);
+                        }
+                        $stack .= htmlspecialchars($args) . ',';
+                    }
+                    trim($stack,',');
+                }
+                $stack .= ')</span></p>';
             }
-            $key     = $key + 1;
+            ++$key;
             $stack  .= "<p>#{$key} {main}</p>";
-        }else{
+        } else {
             $msg           = 'Some thing error';
             $exceptionName = '';
             $stack         = '';
@@ -84,7 +114,6 @@ class ExceptionHandler
                 padding: 0;
                 margin: 0
             }
-
             html,
             body {
                 height: 100%;
@@ -128,6 +157,7 @@ class ExceptionHandler
             }
             #content #stack p span{
                 color:#ad5d54;
+                font-weight:bold;
             }
         </style>
         <body>
@@ -148,5 +178,4 @@ class ExceptionHandler
         </html>
 HTML;
     }
-
 }
