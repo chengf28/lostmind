@@ -2,6 +2,8 @@
 
 namespace Core\Router;
 
+use Core\Exception\Request\MethodNotAllow;
+
 /**
  * 单条路由处理
  * Real programmers don't read comments, novices do
@@ -10,42 +12,11 @@ class Router
 {
     protected $uri;
 
-    protected $controller;
-
     protected $params;
 
     protected $regex;
 
-    protected $methods;
-
-    public function __construct(string $uri = null)
-    {
-        if ($uri) {
-            $this->setUri($uri);
-        }
-    }
-
-    /**
-     * 设置uri
-     * @param string $uri
-     * @return \Core\Router\Router
-     * Real programmers don't read comments, novices do
-     */
-    public function setUri(string $uri)
-    {
-        $this->uri = $uri;
-        return $this;
-    }
-
-    /**
-     * 获得uri
-     * @return string
-     * Real programmers don't read comments, novices do
-     */
-    public function getUri()
-    {
-        return $this->uri;
-    }
+    protected $datas;
 
     /**
      * 添加正则匹配
@@ -70,6 +41,11 @@ class Router
         return str_replace(array_keys($this->regex), array_values($this->regex), $this->uri);
     }
 
+    public function setRegex(string $uri)
+    {
+        $this->uri = $uri;
+        return $this;
+    }
     /**
      * 设置参数
      * @param array $param
@@ -115,11 +91,18 @@ class Router
      * @return string
      * Real programmers don't read comments, novices do
      */
-    public function controller(string $controller = null)
+    public function controller(string $method,string $controller)
     {
-        if ($controller) {
-            $this->controller = $controller;
+        $this->datas[$method] = $controller;
+        return $this;
+    }
+
+    public function getController($method)
+    {
+        if(!isset($this->datas[$method]))
+        {
+            throw new MethodNotAllow($method);
         }
-        return $this->controller;
+        return $this->datas[$method];
     }
 }

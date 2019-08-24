@@ -2,9 +2,6 @@
 
 namespace Core\Router;
 
-use Core\Router\Router;
-use Core\Facade\Route;
-
 /**
  * 路由构建类
  * @author chengf28 <chengf_28@163.com>
@@ -21,6 +18,11 @@ class RouteGenerator
 ~x
 REGEX;
 
+    /**
+     * router集合
+     * @var \Core\Route\RouteCollection
+     * Real programmers don't read comments, novices do
+     */
     protected $collection;
 
     /**
@@ -38,34 +40,33 @@ REGEX;
      * @param string $method
      * @param string $uri
      * @param mixed $controllerData
-     * @return void
+     * @return \Core\Router\Router
      * Real programmers don't read comments, novices do
      */
     protected function parse($method, $uri, $controllerData)
     {
-        $uri = '/' . ltrim($uri, '/');
-
-        list($isStatic, $router) = $this->parseUri($uri);
-        $router->controller($controllerData);
-        $this->collection->addRoute($router, $isStatic,$method);
+        $uri      = '/' . ltrim($uri, '/');
+        list($has,$router) = $this->collection->getRouter($uri);
+        if(!$has)
+        {
+            $isStatic = $this->parseUri($router, $uri);
+            $this->collection->addRouter($uri, $isStatic, $router);
+        }
+        $router->controller($method, $controllerData);
         return $router;
     }
 
     /**
      * 解析URI转换成正则模式
      * @param string $uri
-     * @return array
+     * @return bool
      * Real programmers don't read comments, novices do
      */
-    protected function parseUri(string $uri)
+    protected function parseUri(Router $router, string $uri)
     {
-        $router = new Router;
         if (!preg_match_all(self::Regex, $uri, $match, PREG_SET_ORDER |
             PREG_OFFSET_CAPTURE)) {
-            return [
-                true,
-                $router->setUri($uri)
-            ];
+            return true;
         }
         $offset = 0;
         $regex  = '';
@@ -81,11 +82,8 @@ REGEX;
             $offset = $set[0][1] + strlen($set[0][0]);
         }
         $regex .= '+?$';
-
-        return [
-            false,
-            $router->setUri($regex)
-        ];
+        $router->setRegex($regex);
+        return false;
     }
 
     /**

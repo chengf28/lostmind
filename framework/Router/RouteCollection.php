@@ -14,42 +14,57 @@ class RouteCollection
 {
     private $routers = [];
 
-    private $static = [];
+    public function __construct()
+    {
+        /**
+         * 初始化集合
+         */
+        $this->routers = [
+            'static' => [],
+            'dynami' => [],
+        ];
+    }
+
+    /**
+     * 判断是否已经存在路由
+     * @param string $uri
+     * @param bool $isStatic
+     * @return bool
+     * Real programmers don't read comments, novices do
+     */
+    public function getRouter(string $uri)
+    {
+        if (isset($this->routers['static'][$uri])) {
+            return [true, $this->routers['static'][$uri]];
+        }
+        if (isset($this->routers['dynami'][$uri])) {
+            return [true, $this->routers['dynami'][$uri]];
+        }
+        return [false, new Router];
+    }
     /**
      * 添加合集
      * @param \Core\Router\Router $routeData
      * @return void
      * Real programmers don't read comments, novices do
      */
-    public function addRoute(Router $routeData, bool $isStatic, string $method)
+    public function addRouter(string $uri, bool $isStatic, Router $router)
     {
-        if ($isStatic) {
-            if (isset($this->static[$routeData->getUri()])) {
-                $static = $this->static[$routeData->getUri()];
-            }
-            $this->static[$routeData->getUri()] = $routeData;
-        } else {
-            $this->routers[] = $routeData;
-        }
+        $this->routers[$isStatic ? 'static' : 'dynami'][$uri] = $router;
+        return $this;
     }
 
     /**
      * 匹配路由
-     * @param string $method
      * @param string $uri
      * @return \Core\Router\Router
      * Real programmers don't read comments, novices do
      */
-    public function match(string $method, string $uri)
+    public function match(string $uri)
     {
-
-        foreach ($this->routers as $data) {
-            $router = $data[0];
+        foreach ($this->routers['dynami'] as $router) {
             if (!preg_match_all('~' . $router->getRegex() . '~x', $uri, $match)) {
                 continue;
-            }
-            if (!in_array($method, $data[1])) {
-                throw new MethodNotAllow($method);
             }
             unset($match[0]);
             $router->setParamValue(array_column($match, '0'));
@@ -59,21 +74,15 @@ class RouteCollection
 
     /**
      * 匹配静态路由参数
-     * @param string $method
      * @param string $uri
-     * @return void
+     * @return \Core\Router\Router
      * Real programmers don't read comments, novices do
      */
-    public function staticMatch(string $method, string $uri)
+    public function staticMatch(string $uri)
     {
-        if (!isset($this->static[$uri])) {
+        if (!isset($this->routers['static'][$uri])) {
             return null;
         }
-        $data = $this->static[$uri];
-        if (!in_array($method, $data[1])) {
-            throw new MethodNotAllow($method);
-        }
-        return $data[0];
-        // return isset($this->static[$method][$uri]) ? $this->static[$method][$uri] : null;
+        return $this->routers['static'][$uri];
     }
 }

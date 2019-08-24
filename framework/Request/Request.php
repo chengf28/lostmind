@@ -50,16 +50,16 @@ class Request implements \ArrayAccess, \Iterator
     public function send()
     {
         // 无参数匹配类型路由
-        $route = $this->routes->staticMatch($this->method, $this->uri);
+        $route = $this->routes->staticMatch($this->uri);
         if (!$route) {
             // 有参数类型匹配路由
-            $route = $this->routes->match($this->method, $this->uri);
+            $route = $this->routes->match($this->uri);
             if (!$route) {
                 // 抛出异常
                 throw new PageNotFoundException();
             }
         }
-        $controllerData = $route->controller();
+        $controllerData = $route->getController($this->method);
         if (strpos($controllerData, '@') === false) {
             throw new RouteArgumentException;
         }
