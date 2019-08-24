@@ -88,7 +88,7 @@ class ExceptionHandler
                         }
                         $stack .= htmlspecialchars($args) . ',';
                     }
-                    trim($stack,',');
+                    $stack = trim($stack,',');
                 }
                 $stack .= ')</span></p>';
             }
