@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\Filesystem;
 
 use Core\Exception\Filesystem\FileExistsException;
@@ -11,7 +12,7 @@ use Core\Exception\Filesystem\FileNotFoundException;
  * IF I CAN GO DEATH, I WILL
  */
 class Filesystem implements FilesystemInterface
-{  
+{
     /**
      * 判断是否存在
      * @param string $filename
@@ -19,7 +20,7 @@ class Filesystem implements FilesystemInterface
      * IF I CAN GO DEATH, I WILL
      */
     public function has(string $filename)
-    { 
+    {
         return file_exists($filename);
     }
 
@@ -33,26 +34,23 @@ class Filesystem implements FilesystemInterface
     public function get(string $filename, bool $lock = false)
     {
         $content = '';
-        if (!is_readable($filename))
-        {
-            throw new FileNotFoundException($filename,1);
+        if (!is_readable($filename)) {
+            throw new FileNotFoundException($filename, 1);
         }
-        if(!is_file($filename))
-        {
-            throw new \InvalidArgumentException("Is not a File at path $filename",2);
+        if (!is_file($filename)) {
+            throw new \InvalidArgumentException("Is not a File at path $filename", 2);
         }
         // 打开资源句柄
-        $fd = fopen($filename,'rb+');
-        if (!$fd) 
-        {
-            throw new \LogicException("Can't not create file stream",4);
+        $fd = fopen($filename, 'rb+');
+        if (!$fd) {
+            throw new \LogicException("Can't not create file stream", 4);
         }
         // 加入锁
-        $lock && flock($fd,LOCK_SH);
+        $lock && flock($fd, LOCK_SH);
         // 读取内容
-        $content = fread($fd,filesize($filename));
+        $content = fread($fd, filesize($filename));
         // 解锁
-        $lock && flock($fd,LOCK_UN);
+        $lock && flock($fd, LOCK_UN);
         // 关闭资源句柄
         fclose($fd);
         return $content;
@@ -67,30 +65,26 @@ class Filesystem implements FilesystemInterface
      */
     public function getLine(string $filename, bool $lock = false)
     {
-        if (!is_readable($filename))
-        {
-            throw new FileNotFoundException($filename,1);
+        if (!is_readable($filename)) {
+            throw new FileNotFoundException($filename, 1);
         }
-        if(!is_file($filename))
-        {
-            throw new \InvalidArgumentException("Is not a File at path $filename",2);
+        if (!is_file($filename)) {
+            throw new \InvalidArgumentException("Is not a File at path $filename", 2);
         }
         // 打开资源句柄
-        $fd = fopen($filename,'rb+');
-        if (!$fd) 
-        {
-            throw new \LogicException("Can't not create file stream",4);
+        $fd = fopen($filename, 'rb+');
+        if (!$fd) {
+            throw new \LogicException("Can't not create file stream", 4);
         }
         // 加入锁
-        $lock && flock($fd,LOCK_SH);
-        try{
-            while ($line = fgets($fd)) 
-            {
-                yield trim($line);
+        $lock && flock($fd, LOCK_SH);
+        try {
+            while ($line = fgets($fd)) {
+                yield rtrim($line);
             }
-        }finally{
+        } finally {
             // 解锁
-            $lock && flock($fd,LOCK_UN);
+            $lock && flock($fd, LOCK_UN);
             fclose($fd);
         }
     }
@@ -102,31 +96,26 @@ class Filesystem implements FilesystemInterface
      * @return void
      * IF I CAN GO DEATH, I WILL
      */
-    public function put(string $filename, $data,$lock=false)
+    public function put(string $filename, $data, $lock = false)
     {
-        if ($this->has($filename)) 
-        {
-            if (!is_writeable($filename)) 
-            {
-                throw new \LogicException("Can't not wirte file at paht $filename" ,1);
+        if ($this->has($filename)) {
+            if (!is_writeable($filename)) {
+                throw new \LogicException("Can't not wirte file at paht $filename", 1);
             }
-            if(!is_file($filename))
-            {
-                throw new \InvalidArgumentException("Is not a File at path $filename",2);
+            if (!is_file($filename)) {
+                throw new \InvalidArgumentException("Is not a File at path $filename", 2);
             }
         }
-        if (is_array($data)) 
-        {
-            $data = implode(PHP_EOL,$data);
+        if (is_array($data)) {
+            $data = implode(PHP_EOL, $data);
         }
-        $fd = fopen($filename,'ab+');
-        if (!$fd) 
-        {
-            throw new \LogicException("Can't not create file stream",4);
+        $fd = fopen($filename, 'ab+');
+        if (!$fd) {
+            throw new \LogicException("Can't not create file stream", 4);
         }
-        $lock && flock($fd,LOCK_EX);
-        fputs($fd,$data);
-        $lock && flock($fd,LOCK_UN);
+        $lock && flock($fd, LOCK_EX);
+        fputs($fd, $data);
+        $lock && flock($fd, LOCK_UN);
         fclose($fd);
     }
 
@@ -140,17 +129,15 @@ class Filesystem implements FilesystemInterface
     private function checkST(string $source, string $target)
     {
         // 源不存在
-        if(!$this->has($source))
-        {
-            throw new FileNotFoundException($source,5);
+        if (!$this->has($source)) {
+            throw new FileNotFoundException($source, 5);
         }
         // 目标已经存在
-        if ($this->has($target)) 
-        {
-            throw new FileExistsException($target,6);
+        if ($this->has($target)) {
+            throw new FileExistsException($target, 6);
         }
     }
-    
+
     /**
      * 移动文件
      * @param string $source
@@ -161,7 +148,7 @@ class Filesystem implements FilesystemInterface
     public function move(string $source, string $target)
     {
         $this->checkST($source, $target);
-        return rename($source,$target);
+        return rename($source, $target);
     }
 
     /**
@@ -175,7 +162,7 @@ class Filesystem implements FilesystemInterface
     {
         // 检查
         $this->checkST($source, $target);
-        return copy($source,$target);
+        return copy($source, $target);
     }
 
     /**

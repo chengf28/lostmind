@@ -1,5 +1,7 @@
 <?php
+
 namespace Core\ServerProvide;
+
 use Core\ServerProvide\ServerProvideAbstract;
 
 /**
@@ -11,7 +13,7 @@ class EnvironmentProvider extends ServerProvideAbstract
 {
 
     private $file;
-    
+
     /**
      * 开始
      * @return void
@@ -30,13 +32,11 @@ class EnvironmentProvider extends ServerProvideAbstract
      */
     public function getFile()
     {
-        if($this->file->has($filename = $this->app['app.envPath'].$this->app->getEnvironmentFileName()))
-        {
-            foreach ($this->file->getLine($filename) as $content) 
-            {
+        if ($this->file->has($filename = $this->app['app.envPath'] . $this->app->getEnvironmentFileName())) {
+            foreach ($this->file->getLine($filename) as $content) {
                 // 跳过注释内容
-                if(strpos($content,'#') === 0 || strpos($content,'=') === false) continue;
-                $this->setEnv(...explode('=',$content,2));
+                if (strpos($content, '#') === 0 || strpos($content, '=') === false) continue;
+                $this->setEnv(...explode('=', $content, 2));
             }
         }
     }
@@ -48,9 +48,9 @@ class EnvironmentProvider extends ServerProvideAbstract
      * @return void
      * IF I CAN GO DEATH, I WILL
      */
-    public function setEnv(string $key,$value)
+    public function setEnv(string $key, $value)
     {
-        function_exists('apache_setenv') && apache_setenv($key,$value);
+        function_exists('apache_setenv') && apache_setenv($key, $value);
         function_exists('putenv') && putenv("{$key}={$value}");
         $_ENV[$key] = $value;
     }

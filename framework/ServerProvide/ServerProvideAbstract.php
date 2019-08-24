@@ -1,5 +1,7 @@
 <?php
+
 namespace Core\ServerProvide;
+
 use Core\ServerProvide\ServerProvideInterface as SPInterface;
 
 /**
@@ -21,6 +23,6 @@ abstract class ServerProvideAbstract implements SPInterface
         $this->app = $app;
         $this->start();
     }
-    
+
     abstract public function start();
 }

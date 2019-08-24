@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\Filesystem;
 
 /**
@@ -23,8 +24,8 @@ interface FilesystemInterface
      * @return string
      * If I can go death, I will
      */
-    public function get(string $filename,bool $lock = false);
-    
+    public function get(string $filename, bool $lock = false);
+
     /**
      * 按行读取文件内容
      * @param string $filename
@@ -40,7 +41,7 @@ interface FilesystemInterface
      * @return void
      * If I can go death, I will
      */
-    public function put(string $filename,$data,$locl=false);
+    public function put(string $filename, $data, $locl = false);
 
     /**
      * 移动文件
@@ -50,7 +51,7 @@ interface FilesystemInterface
      * If I can go death, I will
      */
     public function move(string $source, string $target);
-    
+
     /**
      * 复制文件
      * @param string $source

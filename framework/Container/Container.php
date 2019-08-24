@@ -1,6 +1,7 @@
 <?php
 
 namespace Core\Container;
+
 /**
  * 容器类
  * @author chengf28 <chengf_28@163.com>
@@ -93,7 +94,7 @@ class Container implements \ArrayAccess
         }
         /**
          * 从短名中获取到对应真正的类名
-         */ 
+         */
         $concrete = $this->getConcrete($abstract);
 
         /**
@@ -108,7 +109,7 @@ class Container implements \ArrayAccess
         } else {
             $object = $this->makeWith($concrete);
         }
-        
+
         /**
          * 如果有参数,则将参数出栈
          */
@@ -122,7 +123,7 @@ class Container implements \ArrayAccess
         if ($this->isSingle($abstract)) {
             $this->instances[$concrete] = $object;
         }
-        
+
         // 返回实例化好的对象
         return $object;
     }
@@ -242,8 +243,8 @@ class Container implements \ArrayAccess
         $return = [];
         foreach ($parameters as $parameter) {
             // 如果有参数,则判断是否在参数数组中
-            if (!empty($withs = $this->getFinalParameter()) && isset($withs[$parameter->getName()])) {
-                $return[] = $withs[$parameter->getName()];
+            if (!empty($withs = $this->getFinalParameter()) /* && isset($withs[$parameter->getName()]) */) {
+                $return[] = $withs;
                 continue;
             }
 

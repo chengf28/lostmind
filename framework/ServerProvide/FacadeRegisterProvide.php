@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\ServerProvide;
 
 use Core\Facade\Facade;

@@ -1,5 +1,7 @@
 <?php
+
 namespace Core\ServerProvide;
+
 /**
  * 服务器提供接口
  * @author chengf28 <chengf_28@163.com>

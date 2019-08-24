@@ -30,12 +30,10 @@ class Request implements \ArrayAccess, \Iterator
         $this->method    = $_SERVER['REQUEST_METHOD'];
         $this->namespace = 'App\Controllers\\';
         $args            = $_REQUEST;
-        if (empty($args))
-        {
+        if (empty($args)) {
             $raw  = file_get_contents('php://input');
-            if (!empty($raw)) 
-            {
-                $args = (array)$raw;
+            if (!empty($raw)) {
+                $args = (array) $raw;
             }
         }
         $this->RequestParams = $args;
@@ -74,7 +72,7 @@ class Request implements \ArrayAccess, \Iterator
             // 获取参数类型是否为一个Class
             if ($argClass = $param->getClass()) {
                 // 如果有class类型的参数,且在uri中带有参数值,则带有参数的去实例化,否则直接获取实例
-                $with[] = $this->app->makeWith($argClass->name, (array) $route->getParams($argClass->name));
+                $with[] = $this->app->makeWith($argClass->name, (array) $route->getParams($param->name));
             } else {
                 // 如果不是class 这直接将参数放入with中
                 $with[] = $route->getParams($param->name);

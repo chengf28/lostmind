@@ -24,10 +24,9 @@ class ConfigurationProvider extends ServerProvideAbstract
         $this->getConfig();
 
         $basconfig = $this->app->getConfig('base');
-        $this->app->setConfig('AppName',$basconfig['name']);
+        $this->app->setConfig('AppName', $basconfig['name']);
 
         date_default_timezone_set($basconfig['timezone']);
-
     }
 
     /**
@@ -39,7 +38,7 @@ class ConfigurationProvider extends ServerProvideAbstract
     {
         foreach (glob($this->app['app.configPath'] . '*.php') as $file) {
             $this->app->setConfig(
-                basename($file, '.php'), 
+                basename($file, '.php'),
                 include $file
             );
         }

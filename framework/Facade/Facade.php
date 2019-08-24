@@ -69,7 +69,7 @@ abstract class Facade
      * Real programmers don't read comments, novices do
      */
     public static function __callStatic($method_name, $arguments)
-    { 
+    {
         return (static::getFacadeObject())->{$method_name}(...$arguments);
     }
 }

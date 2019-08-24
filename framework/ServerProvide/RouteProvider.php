@@ -26,5 +26,4 @@ class RouteProvider extends ServerProvideAbstract
     {
         require __ROOT__ . 'routes/web.php';
     }
-
 }

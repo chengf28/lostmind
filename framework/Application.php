@@ -25,8 +25,8 @@ class Application extends Container
     {
         $this->rootPath = trim($path, '\\') . DIRECTORY_SEPARATOR;
         // 存入实例
-        $this->bind('app',Application::class);
-        $this->instances(Application::class,$this);
+        $this->bind('app', Application::class);
+        $this->instances(Application::class, $this);
         $this->instances('app.rootPath', $this->rootPath);
         $this->instances('app.envPath', $this->rootPath);
         $this->instances('app.configPath', $this->rootPath . 'config' . DIRECTORY_SEPARATOR);

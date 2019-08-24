@@ -78,7 +78,7 @@ REGEX;
                 'name' => $set[1][0],
                 'regex' => '[A-Za-z_\-0-9]+'
             ]);
-            $regex .= '(' . $set[1][0] . ')';
+            $regex .= '(:' . $set[1][0] . ')';
             $offset = $set[0][1] + strlen($set[0][0]);
         }
         $regex .= '+?$';

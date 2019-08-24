@@ -27,7 +27,7 @@ class Router
      */
     public function where(string $params, string $regex)
     {
-        $this->regex[$params] = $regex;
+        $this->regex[':' . $params] = $regex;
         return $this;
     }
 
@@ -55,7 +55,7 @@ class Router
     public function setParam(array $param)
     {
         $this->params[] = $param['name'];
-        $this->regex[$param['name']] = $param['regex'];
+        $this->regex[':' . $param['name']] = $param['regex'];
         return $this;
     }
 
@@ -91,7 +91,7 @@ class Router
      * @return string
      * Real programmers don't read comments, novices do
      */
-    public function controller(string $method,string $controller)
+    public function controller(string $method, string $controller)
     {
         $this->datas[$method] = $controller;
         return $this;
@@ -99,8 +99,7 @@ class Router
 
     public function getController($method)
     {
-        if(!isset($this->datas[$method]))
-        {
+        if (!isset($this->datas[$method])) {
             throw new MethodNotAllow($method);
         }
         return $this->datas[$method];
