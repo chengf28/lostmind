@@ -27,6 +27,9 @@ class ConfigurationProvider extends ServerProvideAbstract
         $this->app->setConfig('AppName', $basconfig['name']);
 
         date_default_timezone_set($basconfig['timezone']);
+
+        $this->prepareDBconfig();
+
     }
 
     /**
@@ -34,13 +37,25 @@ class ConfigurationProvider extends ServerProvideAbstract
      * @return void
      * IF I CAN GO DEATH, I WILL
      */
-    public function getConfig()
+    protected function getConfig()
     {
         foreach (glob($this->app['app.configPath'] . '*.php') as $file) {
             $this->app->setConfig(
                 basename($file, '.php'),
                 include $file
             );
+        }
+    }
+
+    protected function prepareDBconfig()
+    {
+        // 加载配置信息
+        $config = $this->app->getConfig('databases');
+        if (isset($config[$config['db_type']])) {
+            /**
+             * 读取配置文件
+             */
+            $config = $config[$config['db_type']];
         }
     }
 }

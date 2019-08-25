@@ -2,7 +2,6 @@
 
 namespace Core\ServerProvide;
 
-use Core\Facade\Route;
 use Core\ServerProvide\ServerProvideAbstract;
 
 /**

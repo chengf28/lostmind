@@ -94,6 +94,7 @@ class Application extends Container
             \Core\ServerProvide\ConfigurationProvider::class,
             \Core\ServerProvide\FacadeRegisterProvide::class,
             \Core\ServerProvide\RouteProvider::class,
+            \Core\ServerProvide\DBqueryProvider::class,
         ]);
     }
 
