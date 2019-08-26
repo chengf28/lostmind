@@ -65,7 +65,7 @@ class ConfigurationProvider extends ServerProvideAbstract
         /**
          * 读取配置文件
          */
-        $dsn = [];
+        $raw_config = [];
         foreach ($config[$config['db_type']] as $key => $value) 
         {
             if ($key == 'database') {
@@ -75,17 +75,34 @@ class ConfigurationProvider extends ServerProvideAbstract
             if ($value = explode(',',$value))
             {
                 if (in_array($key, $need)) { 
-                    $dsn[$key] = array_map(function($item) use ($key)
+                    $raw_config[$key] = array_map(function($item) use ($key)
                     {
                         return "$key=$item";
                     },$value);
                 }else{
-                    $dsn[$key] = $value;
+                    $raw_config[$key] = $value;
                 }
             }
         }
         
-        var_dump($dsn);
+        
+        $a = array_reduce($raw_config,function($carray,$narray){
+            // var_dump($carray,$narray);
+            if ($carray) 
+            {
+                $ret = max($carray, $narray);
+                foreach( $ret as $key => &$value)
+                {
+                    $value .= (isset($narray[$key]) ? $narray[$key] : end($narray)).';';
+                }
+                return $ret;
+            }
+            return $narray;
+        });
+
+        var_dump($a);
+        // $dsn[] = $config['db_type'].':';
+        // var_dump($dsn);
 
         die;
     }
