@@ -67,9 +67,9 @@ class ExceptionHandler
             $stack         = 'Stack :';
             $position      = "At : <b>{$e->getFile()} Line # {$e->getLine()}</b>";
             foreach ($e->getTrace() as $key => $value) {
-                $stack .= "<p>#{$key} ";
+                $stack .= "<p><i>#{$key}</i> ";
                 if (isset($value['file'])) {
-                    $stack .= "{$value['file']}({$value['line']}):<span>";
+                    $stack .= "<span>{$value['file']}({$value['line']}):</span>  ";
                 }
                 if (isset($value['class'])) {
                     $stack .= $value['class'] . $value['type'];
@@ -90,7 +90,7 @@ class ExceptionHandler
                     }
                     $stack = trim($stack,',');
                 }
-                $stack .= ')</span></p>';
+                $stack .= ')</p>';
             }
             ++$key;
             $stack  .= "<p>#{$key} {main}</p>";
@@ -152,12 +152,23 @@ class ExceptionHandler
                 color: #fff;
                 margin: 1rem 0;
             }
+            #content #stack{
+                padding:50px 10%;
+                box-sizing:border-box;
+            }
             #content #stack p{
                 margin: 1rem 0;
-            }
-            #content #stack p span{
                 color:#ad5d54;
                 font-weight:bold;
+            }
+            #content #stack p > i
+            {
+                color:#000;
+                fonnt-weight:normal;
+            }
+            #content #stack p span{
+                color:#000;
+                font-weight:normal;
             }
         </style>
         <body>
@@ -170,7 +181,6 @@ class ExceptionHandler
                 $position
             </div>
             <div id="stack">
-                
                 {$stack}
             </div>
         </div>
