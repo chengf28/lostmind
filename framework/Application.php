@@ -27,6 +27,8 @@ class Application extends Container
         // 存入实例
         $this->bind('app', Application::class);
         $this->instances(Application::class, $this);
+        // 错误与异常处理注册
+        $this->instances('ExcepthonHandler', new \Core\Exception\ExceptionHandler($this));
         $this->instances('app.rootPath', $this->rootPath);
         $this->instances('app.envPath', $this->rootPath);
         $this->instances('app.configPath', $this->rootPath . 'config' . DIRECTORY_SEPARATOR);
@@ -94,7 +96,6 @@ class Application extends Container
             \Core\ServerProvide\ConfigurationProvider::class,
             \Core\ServerProvide\FacadeRegisterProvide::class,
             \Core\ServerProvide\RouteProvider::class,
-            \Core\ServerProvide\DBqueryProvider::class,
         ]);
     }
 

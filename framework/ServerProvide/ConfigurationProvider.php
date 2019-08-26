@@ -22,14 +22,12 @@ class ConfigurationProvider extends ServerProvideAbstract
     {
         $this->file = $this->app['file'];
         $this->getConfig();
-
         $basconfig = $this->app->getConfig('base');
         $this->app->setConfig('AppName', $basconfig['name']);
 
         date_default_timezone_set($basconfig['timezone']);
 
         $this->prepareDBconfig();
-
     }
 
     /**
@@ -47,15 +45,48 @@ class ConfigurationProvider extends ServerProvideAbstract
         }
     }
 
+    /**
+     * 处理DBquery需要的数据库类型
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
     protected function prepareDBconfig()
     {
+        $need = [
+            'host',
+            'port',
+            'dbname',
+        ];
         // 加载配置信息
         $config = $this->app->getConfig('databases');
-        if (isset($config[$config['db_type']])) {
-            /**
-             * 读取配置文件
-             */
-            $config = $config[$config['db_type']];
+        if (!isset($config[$config['db_type']])) {
+            throw new \InvalidArgumentException("Can't not found databases type which is `{$config['db_type']}`");
         }
+        /**
+         * 读取配置文件
+         */
+        $dsn = [];
+        foreach ($config[$config['db_type']] as $key => $value) 
+        {
+            if ($key == 'database') {
+                $key = 'dbname';
+            }
+            
+            if ($value = explode(',',$value))
+            {
+                if (in_array($key, $need)) { 
+                    $dsn[$key] = array_map(function($item) use ($key)
+                    {
+                        return "$key=$item";
+                    },$value);
+                }else{
+                    $dsn[$key] = $value;
+                }
+            }
+        }
+        
+        var_dump($dsn);
+
+        die;
     }
 }
