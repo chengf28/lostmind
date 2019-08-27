@@ -22,8 +22,6 @@ class ConfigurationProvider extends ServerProvideAbstract
     {
         $this->file = $this->app['file'];
         $this->getBaseConfig();
-      
-
         $this->prepareDBconfig();
     }
 
@@ -34,8 +32,8 @@ class ConfigurationProvider extends ServerProvideAbstract
      */
     protected function getBaseConfig()
     {
-        $basconfig = include($this->app['app.configPath'].'base.php');
-        $this->app->setConfig('base',$basconfig);
+        $basconfig = include($this->app['app.configPath'] . 'base.php');
+        $this->app->setConfig('base', $basconfig);
         $this->app->setConfig('AppName', $basconfig['name']);
         date_default_timezone_set($basconfig['timezone']);
     }
@@ -98,8 +96,7 @@ class ConfigurationProvider extends ServerProvideAbstract
                     $certificate[$name] = $value_arr;
                 }
             }
-            return array_merge(['dsn'  => $dsn_array],$certificate);
-            
+            return array_merge(['dsn'  => $dsn_array], $certificate);
         }, $raw_config);
         $parepre_config['prefix'] = $config[$config['db_type']]['prefix'];
         $parepre_config['type'] = $config['db_type'];
