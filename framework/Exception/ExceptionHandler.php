@@ -121,14 +121,6 @@ class ExceptionHandler
                 height: 100%;
             }
 
-            h1 {
-                height: 6rem;
-                line-height: 6rem;
-                width: 100%;
-                text-align: center;
-                background: #677470;
-                color: #fff;
-            }
             #content{
                 overflow: auto;
                 padding: 1rem;
@@ -145,7 +137,7 @@ class ExceptionHandler
                 padding   : 3rem;
                 box-sizing:border-box;
                 width     : 100%;
-                background: #ad5d54;
+                background: #6595ac;
             }
             #error p
             {
@@ -160,7 +152,7 @@ class ExceptionHandler
             }
             #content #stack p{
                 margin: 1rem 0;
-                color:#ad5d54;
+                color:#6595ac;
                 font-weight:bold;
                 font-size:.9rem;
             }
