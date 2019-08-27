@@ -60,7 +60,7 @@ class ExceptionHandler
      */
     public function ExcepHandler(\Throwable $e)
     {
-        
+        $name = is_array($this->app->getConfig('AppName')) ? current($this->app->getConfig('AppName')) : $this->app->getConfig('AppName');
         if ($this->app->getConfig('base.debug')) {
             $exceptionName = get_class($e) . ':';
             $msg           = htmlentities($e->getMessage());
@@ -71,6 +71,8 @@ class ExceptionHandler
                 if (isset($value['file'])) {
                     $stack .= "<span>{$value['file']}({$value['line']}):</span>  ";
                 }
+
+                $stack .= '<b>';
                 if (isset($value['class'])) {
                     $stack .= $value['class'] . $value['type'];
                 }
@@ -90,10 +92,10 @@ class ExceptionHandler
                     }
                     $stack = trim($stack,',');
                 }
-                $stack .= ')</p>';
+                $stack .= ')</b></p>';
             }
             ++$key;
-            $stack  .= "<p>#{$key} {main}</p>";
+            $stack  .= "<p><i>#{$key}</i> <b>{main}<b></p>";
         } else {
             $msg           = 'Some thing error';
             $exceptionName = '';
@@ -107,7 +109,7 @@ class ExceptionHandler
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <meta http-equiv="X-UA-Compatible" content="ie=edge">
-            <title>{$this->app->getConfig('AppName')}</title>
+            <title>$name</title>
         </head>
         <style>
             * {
@@ -160,11 +162,20 @@ class ExceptionHandler
                 margin: 1rem 0;
                 color:#ad5d54;
                 font-weight:bold;
+                font-size:.9rem;
             }
             #content #stack p > i
             {
                 color:#000;
-                fonnt-weight:normal;
+                font-weight:normal;
+            }
+
+            #content #stack p > b
+            {
+                width: 100%;
+                display: inline-block;
+                font-size: 1.1rem;
+                text-indent:2.2rem;
             }
             #content #stack p span{
                 color:#000;
