@@ -1,7 +1,8 @@
 <?php
+
 namespace Core\Exception\Databases;
 
-class CreateConnectException extends \RuntimeException
-{
-    
-}
+use RuntimeException;
+
+class CreateConnectException extends RuntimeException
+{ }
