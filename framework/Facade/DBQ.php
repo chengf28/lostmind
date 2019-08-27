@@ -14,7 +14,7 @@ class DBQ extends Facade
 {
     protected static function getFacadeName()
     {
-        return 'DBQ';
+        return 'DBquery';
     }
     
 }

@@ -64,6 +64,8 @@ class Application extends Container
             \Core\Route\RouteCollection::class => \Core\Route\RouteCollection::class,
             // 请求
             'Request' => \Core\Request\Request::class,
+            
+            'DBquery' => \Core\Database\DBmanage::class,
         ]
             as $abstract => $concrete) {
             $this->singleBind($abstract, $concrete);

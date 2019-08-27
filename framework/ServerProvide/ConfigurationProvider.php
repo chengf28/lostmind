@@ -21,11 +21,8 @@ class ConfigurationProvider extends ServerProvideAbstract
     public function start()
     {
         $this->file = $this->app['file'];
-        $this->getConfig();
-        $basconfig = $this->app->getConfig('base');
-        $this->app->setConfig('AppName', $basconfig['name']);
-
-        date_default_timezone_set($basconfig['timezone']);
+        $this->getBaseConfig();
+      
 
         $this->prepareDBconfig();
     }
@@ -35,14 +32,12 @@ class ConfigurationProvider extends ServerProvideAbstract
      * @return void
      * IF I CAN GO DEATH, I WILL
      */
-    protected function getConfig()
+    protected function getBaseConfig()
     {
-        foreach (glob($this->app['app.configPath'] . '*.php') as $file) {
-            $this->app->setConfig(
-                basename($file, '.php'),
-                include $file
-            );
-        }
+        $basconfig = include($this->app['app.configPath'].'base.php');
+        $this->app->setConfig('base',$basconfig);
+        $this->app->setConfig('AppName', $basconfig['name']);
+        date_default_timezone_set($basconfig['timezone']);
     }
 
     /**
@@ -53,57 +48,61 @@ class ConfigurationProvider extends ServerProvideAbstract
     protected function prepareDBconfig()
     {
         $need = [
-            'host',
-            'port',
-            'dbname',
+            'host'        => 'host',
+            'port'        => 'port',
+            'database'    => 'dbname',
+            'db_username' => false,
+            'db_password' => false,
         ];
-        // 加载配置信息
-        $config = $this->app->getConfig('databases');
+        /**
+         * 加载配置信息
+         */
+        $config = include($this->app['app.configPath'] . 'databases.php');
+        $this->app->setConfig('databases', $config);
         if (!isset($config[$config['db_type']])) {
             throw new \InvalidArgumentException("Can't not found databases type which is `{$config['db_type']}`");
         }
         /**
          * 读取配置文件
          */
-        $raw_config = [];
-        foreach ($config[$config['db_type']] as $key => $value) 
-        {
-            if ($key == 'database') {
-                $key = 'dbname';
-            }
-            
-            if ($value = explode(',',$value))
-            {
-                if (in_array($key, $need)) { 
-                    $raw_config[$key] = array_map(function($item) use ($key)
-                    {
-                        return "$key=$item";
-                    },$value);
-                }else{
-                    $raw_config[$key] = $value;
-                }
-            }
+        if (isset($config[$config['db_type']]['write']) && isset($config[$config['db_type']]['read'])) {
+            $raw_config = $config[$config['db_type']];
+            unset($raw_config['prefix']);
+        } else {
+            $raw_config['read'] = $raw_config['write'] = $config[$config['db_type']];
         }
-        
-        
-        $a = array_reduce($raw_config,function($carray,$narray){
-            // var_dump($carray,$narray);
-            if ($carray) 
-            {
-                $ret = max($carray, $narray);
-                foreach( $ret as $key => &$value)
-                {
-                    $value .= (isset($narray[$key]) ? $narray[$key] : end($narray)).';';
+        $parepre_config = array_map(function ($raw) use ($need) {
+            $dsn_array   = [];
+            $certificate = [];
+            foreach ($need as $name => $keyname) {
+                $value_arr = explode(',', $raw[$name]);
+                if ($keyname !== false) {
+                    $value_arr = array_map(function ($item) use ($keyname) {
+                        return "$keyname=$item;";
+                    }, $value_arr);
+                    if ($dsn_array) {
+                        if (count($dsn_array) < count($value_arr)) {
+                            $tmp       = $value_arr;
+                            $value_arr = $dsn_array;
+                            $dsn_array = $tmp;
+                            unset($tmp);
+                        }
+                        foreach ($dsn_array as $k => &$v) {
+                            $v .= isset($value_arr[$k]) ? $value_arr[$k] : end($value_arr);
+                        }
+                        unset($v);
+                    } else {
+                        $dsn_array = $value_arr;
+                    }
+                } else {
+                    $certificate[$name] = $value_arr;
                 }
-                return $ret;
             }
-            return $narray;
-        });
-
-        var_dump($a);
-        // $dsn[] = $config['db_type'].':';
-        // var_dump($dsn);
-
-        die;
+            return array_merge(['dsn'  => $dsn_array],$certificate);
+            
+        }, $raw_config);
+        $parepre_config['prefix'] = $config[$config['db_type']]['prefix'];
+        $parepre_config['type'] = $config['db_type'];
+        $this->app->setConfig('DBconfig', $parepre_config);
     }
 }
