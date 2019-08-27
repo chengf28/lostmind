@@ -58,17 +58,19 @@ class ConfigurationProvider extends ServerProvideAbstract
         $config = include($this->app['app.configPath'] . 'databases.php');
         $this->app->setConfig('databases', $config);
         if (!isset($config[$config['db_type']])) {
-            throw new \InvalidArgumentException("Can't not found databases type which is `{$config['db_type']}`");
+            throw new \Core\Exception\Databases\InvalidConfigArgumentException("Can't not found databases type which is `{$config['db_type']}`");
         }
         /**
          * 读取配置文件
          */
-        if (isset($config[$config['db_type']]['write']) && isset($config[$config['db_type']]['read'])) {
-            $raw_config = $config[$config['db_type']];
-            unset($raw_config['prefix']);
-        } else {
-            $raw_config['read'] = $raw_config['write'] = $config[$config['db_type']];
-        }
+
+        // if (isset($config[$config['db_type']]['write']) && isset($config[$config['db_type']]['read'])) 
+        // {
+        //     $raw_config = $config[$config['db_type']];
+        //     unset($raw_config['prefix']);
+        // } else {
+        //     $raw_config['read'] = $raw_config['write'] = $config[$config['db_type']];
+        // }
         $parepre_config = array_map(function ($raw) use ($need) {
             $dsn_array   = [];
             $certificate = [];
@@ -99,7 +101,7 @@ class ConfigurationProvider extends ServerProvideAbstract
             return array_merge(['dsn'  => $dsn_array], $certificate);
         }, $raw_config);
         $parepre_config['prefix'] = $config[$config['db_type']]['prefix'];
-        $parepre_config['type'] = $config['db_type'];
+        $parepre_config['type']   = $config['db_type'];
         $this->app->setConfig('DBconfig', $parepre_config);
     }
 }
