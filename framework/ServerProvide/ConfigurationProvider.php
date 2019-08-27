@@ -63,14 +63,12 @@ class ConfigurationProvider extends ServerProvideAbstract
         /**
          * 读取配置文件
          */
-
-        // if (isset($config[$config['db_type']]['write']) && isset($config[$config['db_type']]['read'])) 
-        // {
-        //     $raw_config = $config[$config['db_type']];
-        //     unset($raw_config['prefix']);
-        // } else {
-        //     $raw_config['read'] = $raw_config['write'] = $config[$config['db_type']];
-        // }
+        if (isset($config[$config['db_type']]['write']) && isset($config[$config['db_type']]['read'])) {
+            $raw_config = $config[$config['db_type']];
+            unset($raw_config['prefix']);
+        } else {
+            $raw_config['read'] = $raw_config['write'] = $config[$config['db_type']];
+        }
         $parepre_config = array_map(function ($raw) use ($need) {
             $dsn_array   = [];
             $certificate = [];
