@@ -46,7 +46,7 @@ class ExceptionHandler
     public function ShudownHandler()
     {
         $error = error_get_last();
-        if ($error && $error['type'] === E_ERROR){
+        if ($error && ($error['type'] === E_ERROR || $error['type'] === E_COMPILE_ERROR)){
             $excep = new FatalErrorException($error['message'],0,1,$error['file'],$error['line']);
             $this->ExcepHandler($excep);
         }
@@ -60,7 +60,6 @@ class ExceptionHandler
      */
     public function ExcepHandler(\Throwable $e)
     {
-        $name = is_array($this->app->getConfig('AppName')) ? current($this->app->getConfig('AppName')) : $this->app->getConfig('AppName');
         if ($this->app->getConfig('base.debug')) {
             $exceptionName = get_class($e) . ':';
             $msg           = htmlentities($e->getMessage());
@@ -88,7 +87,7 @@ class ExceptionHandler
                         {
                             $args = get_class($args);
                         }
-                        $stack .= htmlspecialchars($args) . ',';
+                        $stack .= htmlspecialchars((string)$args) . ',';
                     }
                     $stack = trim($stack,',');
                 }
@@ -109,7 +108,7 @@ class ExceptionHandler
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <meta http-equiv="X-UA-Compatible" content="ie=edge">
-            <title>$name</title>
+            <title>Exception</title>
         </head>
         <style>
             * {
