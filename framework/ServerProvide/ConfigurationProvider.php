@@ -63,16 +63,27 @@ class ConfigurationProvider extends ServerProvideAbstract
         /**
          * 读取配置文件
          */
-        if (isset($config[$config['db_type']]['write']) && isset($config[$config['db_type']]['read'])) {
-            $raw_config = $config[$config['db_type']];
-            unset($raw_config['prefix']);
+        $type   = $config['db_type'];
+        $config = $config[$config['db_type']];
+        if (isset($config['write']) && isset($config['read'])) {
+            $raw_config['write'] = $config['write'];
+            $raw_config['read']  = $config['read'];
         } else {
-            $raw_config['read'] = $raw_config['write'] = $config[$config['db_type']];
+            $raw_config['read'] = $raw_config['write'] = $config;
         }
-        $parepre_config = array_map(function ($raw) use ($need) {
+        $parepre_config = array_map(function ($raw) use ($need, $config) 
+        {
             $dsn_array   = [];
             $certificate = [];
             foreach ($need as $name => $keyname) {
+                if (!isset($raw[$name])) 
+                {
+                    if (!isset($config[$name])) 
+                    {
+                        throw new \Core\Exception\Databases\InvalidConfigArgumentException("Databases configuration miss parameter $name");
+                    }
+                    $raw[$name] = $config[$name];
+                }
                 $value_arr = explode(',', $raw[$name]);
                 if ($keyname !== false) {
                     $value_arr = array_map(function ($item) use ($keyname) {
@@ -98,8 +109,8 @@ class ConfigurationProvider extends ServerProvideAbstract
             }
             return array_merge(['dsn'  => $dsn_array], $certificate);
         }, $raw_config);
-        $parepre_config['prefix'] = $config[$config['db_type']]['prefix'];
-        $parepre_config['type']   = $config['db_type'];
+        $parepre_config['prefix'] = $config['prefix'];
+        $parepre_config['type']   = $type;
         $this->app->setConfig('DBconfig', $parepre_config);
     }
 }
