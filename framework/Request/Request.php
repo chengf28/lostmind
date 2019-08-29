@@ -8,20 +8,61 @@ use Core\Exception\Request\PageNotFoundException;
 use Core\Exception\Request\RouteArgumentException;
 use ReflectionMethod;
 
+/**
+ * 请求类
+ * @author chengf28 <chengf_28@163.com>
+ * Real programmers don't read comments, novices do
+ */
 class Request implements \ArrayAccess, \Iterator
 {
+    /**
+     * 请求方式
+     * @var string
+     * Real programmers don't read comments, novices do
+     */
     protected $method;
 
+    /**
+     * 请求uri
+     * @var string
+     * Real programmers don't read comments, novices do
+     */
     protected $uri;
 
+    /**
+     * 路由集合
+     * @var \Core\Route\RouteCollection
+     * Real programmers don't read comments, novices do
+     */
     protected $routes;
 
+    /**
+     * Application 和兴
+     * @var \Core\Application
+     * Real programmers don't read comments, novices do
+     */
     protected $app;
 
+    /**
+     * 当前命名空间
+     * @var string
+     * Real programmers don't read comments, novices do
+     */
     protected $namespace;
 
+    /**
+     * 请求参数
+     * @var array
+     * Real programmers don't read comments, novices do
+     */
     protected $RequestParams;
 
+    /**
+     * 构造函数
+     * @param \Core\Application $app
+     * @param \Core\Route\RouteCollection $routeCollection
+     * Real programmers don't read comments, novices do
+     */
     public function __construct(Application $app, RouteCollection $routeCollection)
     {
         $this->app       = $app;

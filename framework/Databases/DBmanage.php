@@ -9,6 +9,11 @@ use DBquery\Connect\Connect;
 use PDO;
 use Throwable;
 
+/**
+ * DB管理器
+ * @author chengf28 <chengf_28@163.com>
+ * Real programmers don't read comments, novices do
+ */
 class DBmanage
 {
     /**
@@ -24,7 +29,7 @@ class DBmanage
      * Real programmers don't read comments, novices do
      */
     protected $connect;
-    
+
     /**
      * 多库的选择
      * @var array
@@ -98,8 +103,7 @@ class DBmanage
      */
     protected function getConnect()
     {
-        if (!$this->connect) 
-        {
+        if (!$this->connect) {
             $this->createConnect();
         }
         return $this->connect;

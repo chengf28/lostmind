@@ -9,5 +9,11 @@ namespace Core\ServerProvide;
  */
 interface ServerProvideInterface
 {
+    /**
+     * 启动服务器
+     * @param \Core\Application $app
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
     public function boot(\Core\Application $app);
 }

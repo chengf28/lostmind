@@ -18,6 +18,12 @@ abstract class ServerProvideAbstract implements SPInterface
      */
     public $app;
 
+    /**
+     * 启动服务器
+     * @param \Core\Application $app
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
     public function boot(\Core\Application $app)
     {
         $this->app = $app;
