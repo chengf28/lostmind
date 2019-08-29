@@ -32,6 +32,7 @@ class Application extends Container
         $this->instances('app.rootPath', $this->rootPath);
         $this->instances('app.envPath', $this->rootPath);
         $this->instances('app.configPath', $this->rootPath . 'config' . DIRECTORY_SEPARATOR);
+        $this->instances('app.viewPath', $this->rootPath . 'views' . DIRECTORY_SEPARATOR);
     }
 
     /**
@@ -64,23 +65,13 @@ class Application extends Container
             \Core\Route\RouteCollection::class => \Core\Route\RouteCollection::class,
             // 请求
             'Request' => \Core\Request\Request::class,
-            
+            // 数据库管理
             'DBquery' => \Core\Database\DBmanage::class,
-        ]
-            as $abstract => $concrete) {
-            $this->singleBind($abstract, $concrete);
-        }
-
-
-        // 工具类别名注册
-        foreach ([
-            // 文件操作系统
-            'file' => \Core\Filesystem\Filesystem::class,
             // 路由构建
             'route' => \Core\Router\RouteGenerator::class,
         ]
             as $abstract => $concrete) {
-            $this->bind($abstract, $concrete);
+            $this->singleBind($abstract, $concrete);
         }
     }
 
@@ -142,15 +133,36 @@ class Application extends Container
      */
     public function getConfig(string $key = null)
     {
-        if (!$key) {
-            return $this->config;
+        $key = explode('.', $key, 2);
+        if (count($key) == 2) 
+        {
+            $arr_key  = $key[1];
+            $name = $key[0];
+        }else {
+            $name  = $key[0];
+            $arr_key = null;
+        }
+        if (!isset($this->config[$name])) {
+            $this->loadConfig($name);
         }
 
-        if (strpos($key, '.') !== false) {
-            list($name, $namekey) = explode('.', $key, 2);
-            return $this->config[$name][$namekey] ?? [];
+        if ($arr_key) {
+            return $this->config[$name][$arr_key];
         }
+        return $this->config[$name] ?? [];
+    }
 
-        return $this->config[$key] ?? [];
+    /**
+     * 加载配置文件到内存中
+     * @param string $name
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
+    protected function loadConfig(string $name)
+    {
+        $path = $this->instances['app.configPath'] . $name . '.php';
+        if (file_exists($path)) {
+            $this->config[$name] = include($path);
+        }
     }
 }

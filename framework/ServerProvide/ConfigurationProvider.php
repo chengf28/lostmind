@@ -11,8 +11,6 @@ use Core\ServerProvide\ServerProvideAbstract;
  */
 class ConfigurationProvider extends ServerProvideAbstract
 {
-    private $file;
-
     /**
      * 开始
      * @return void
@@ -20,7 +18,13 @@ class ConfigurationProvider extends ServerProvideAbstract
      */
     public function start()
     {
-        $this->file = $this->app['file'];
+        foreach (glob($this->app['app.configPath'] . '*.php') as $file) 
+        {
+            $this->app->setConfig(
+                basename($file, '.php'),
+                include $file
+            );
+        }
         $this->getBaseConfig();
         $this->prepareDBconfig();
     }
@@ -32,7 +36,7 @@ class ConfigurationProvider extends ServerProvideAbstract
      */
     protected function getBaseConfig()
     {
-        $basconfig = include($this->app['app.configPath'] . 'base.php');
+        $basconfig = $this->app->getConfig('base');
         $this->app->setConfig('base', $basconfig);
         $this->app->setConfig('AppName', $basconfig['name']);
         date_default_timezone_set($basconfig['timezone']);
@@ -55,7 +59,7 @@ class ConfigurationProvider extends ServerProvideAbstract
         /**
          * 加载配置信息
          */
-        $config = include($this->app['app.configPath'] . 'databases.php');
+        $config = $this->app->getConfig('databases');
         $this->app->setConfig('databases', $config);
         if (!isset($config[$config['db_type']])) {
             throw new \Core\Exception\Databases\InvalidConfigArgumentException("Can't not found databases type which is `{$config['db_type']}`");

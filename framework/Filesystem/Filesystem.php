@@ -13,13 +13,16 @@ use Core\Exception\Filesystem\FileNotFoundException;
  */
 class Filesystem implements FilesystemInterface
 {
+    protected $fd;
+
+    protected $lock;
     /**
      * 判断是否存在
      * @param string $filename
      * @return bool
      * IF I CAN GO DEATH, I WILL
      */
-    public function has(string $filename)
+    public static function has(string $filename)
     {
         return file_exists($filename);
     }
@@ -65,6 +68,7 @@ class Filesystem implements FilesystemInterface
      */
     public function getLine(string $filename, bool $lock = false)
     {
+        $this->lock = $lock;
         if (!is_readable($filename)) {
             throw new FileNotFoundException($filename, 1);
         }
@@ -72,20 +76,14 @@ class Filesystem implements FilesystemInterface
             throw new \InvalidArgumentException("Is not a File at path $filename", 2);
         }
         // 打开资源句柄
-        $fd = fopen($filename, 'rb+');
+        $this->fd = $fd = fopen($filename, 'rb+');
         if (!$fd) {
             throw new \LogicException("Can't not create file stream", 4);
         }
         // 加入锁
-        $lock && flock($fd, LOCK_SH);
-        try {
-            while ($line = fgets($fd)) {
-                yield rtrim($line);
-            }
-        } finally {
-            // 解锁
-            $lock && flock($fd, LOCK_UN);
-            fclose($fd);
+        $this->lock && flock($fd, LOCK_SH);
+        while ($line = fgets($fd)) {
+            yield rtrim($line);
         }
     }
     /**
@@ -126,7 +124,7 @@ class Filesystem implements FilesystemInterface
      * @return void
      * IF I CAN GO DEATH, I WILL
      */
-    private function checkST(string $source, string $target)
+    private static function checkST(string $source, string $target)
     {
         // 源不存在
         if (!$this->has($source)) {
@@ -145,9 +143,9 @@ class Filesystem implements FilesystemInterface
      * @return bool
      * IF I CAN GO DEATH, I WILL
      */
-    public function move(string $source, string $target)
+    public static function move(string $source, string $target)
     {
-        $this->checkST($source, $target);
+        self::checkST($source, $target);
         return rename($source, $target);
     }
 
@@ -158,10 +156,10 @@ class Filesystem implements FilesystemInterface
      * @return bool
      * IF I CAN GO DEATH, I WILL
      */
-    public function copy(string $source, string $target)
+    public static function copy(string $source, string $target)
     {
         // 检查
-        $this->checkST($source, $target);
+        self::checkST($source, $target);
         return copy($source, $target);
     }
 
@@ -171,8 +169,25 @@ class Filesystem implements FilesystemInterface
      * @return bool
      * IF I CAN GO DEATH, I WILL
      */
-    public function delete(string $target)
+    public static function delete(string $target)
     {
         return unlink($target);
+    }
+
+    /**
+     * 关闭资源句柄
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
+    public function close()
+    {
+        /**
+         * 解锁
+         */
+        $this->lock && flock($this->fd, LOCK_EX);
+        if ($this->fd) {
+            // 关闭句柄
+            fclose($this->fd);
+        }
     }
 }

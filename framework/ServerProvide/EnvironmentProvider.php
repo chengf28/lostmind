@@ -2,6 +2,7 @@
 
 namespace Core\ServerProvide;
 
+use Core\Filesystem\Filesystem;
 use Core\ServerProvide\ServerProvideAbstract;
 
 /**
@@ -12,8 +13,6 @@ use Core\ServerProvide\ServerProvideAbstract;
 class EnvironmentProvider extends ServerProvideAbstract
 {
 
-    private $file;
-
     /**
      * 开始
      * @return void
@@ -21,7 +20,7 @@ class EnvironmentProvider extends ServerProvideAbstract
      */
     public function start()
     {
-        $this->file = $this->app['file'];
+        
         $this->getFile();
     }
 
@@ -32,12 +31,14 @@ class EnvironmentProvider extends ServerProvideAbstract
      */
     public function getFile()
     {
-        if ($this->file->has($filename = $this->app['app.envPath'] . $this->app->getEnvironmentFileName())) {
-            foreach ($this->file->getLine($filename) as $content) {
+        $file = new Filesystem;
+        if (Filesystem::has($filename = $this->app['app.envPath'] . $this->app->getEnvironmentFileName())) {
+            foreach ($file->getLine($filename) as $content) {
                 // 跳过注释内容
                 if (strpos($content, '#') === 0 || strpos($content, '=') === false) continue;
                 $this->setEnv(...explode('=', $content, 2));
             }
+            $file->close();
         }
     }
 

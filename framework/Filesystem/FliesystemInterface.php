@@ -15,7 +15,7 @@ interface FilesystemInterface
      * @return bool
      * If I can go death, I will
      */
-    public function has(string $filename);
+    public static function has(string $filename);
 
     /**
      * 获取文件内容
@@ -50,7 +50,7 @@ interface FilesystemInterface
      * @return bool
      * If I can go death, I will
      */
-    public function move(string $source, string $target);
+    public static function move(string $source, string $target);
 
     /**
      * 复制文件
@@ -59,7 +59,7 @@ interface FilesystemInterface
      * @return bool
      * If I can go death, I will
      */
-    public function copy(string $source, string $target);
+    public static function copy(string $source, string $target);
 
     /**
      * 删除文件
@@ -67,5 +67,12 @@ interface FilesystemInterface
      * @return bool
      * If I can go death, I will
      */
-    public function delete(string $target);
+    public static function delete(string $target);
+
+    /**
+     * 关闭资源句柄
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
+    public function close();
 }
