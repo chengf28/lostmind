@@ -4,21 +4,37 @@
 |---------------------------------------
 | @author chengf28 <chengf_28@163.com>
 |---------------------------------------
-| 临时创建异常用的脚本
+| 命令行
 |---------------------------------------
 | 
 */
-
-$num       = $argc;
-$type      = $argv[1];
-$namepos   = strrpos($argv[2], '/');
-$namespace = substr($argv[2], 0, $namepos);
-$name      = substr($argv[2], $namepos + 1);
-$rootpath  = __DIR__ . DIRECTORY_SEPARATOR . 'framework';
-if (!file_exists($rootpath . DIRECTORY_SEPARATOR . $namespace)) {
-    mkdir($rootpath . DIRECTORY_SEPARATOR . $namespace, 0777, true);
+$operate = $argv[1];
+switch ($operate) {
+    case '-s':
+    case '-S':
+        $port   = isset($argv[2]) ? $argv[2] : '80';
+        $string = 'php -S localhost:'.$port . (isset($argv[3]) ? $argv[3] : ' ./public/index.php');
+        `$string`;
+        break;
+    
+    default:
+        # code...
+        break;
 }
-$content = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . "mould/$type.lm");
-$content = str_replace('REPLACENAMESPACE', $namespace, $content);
-$content = str_replace('REPLACECLASSNAME', $name, $content);
-file_put_contents($rootpath . DIRECTORY_SEPARATOR . $argv[2] . '.php', $content);
+
+
+
+
+
+
+// $namepos   = strrpos($argv[2], '/');
+// $namespace = substr($argv[2], 0, $namepos);
+// $name      = substr($argv[2], $namepos + 1);
+// $rootpath  = __DIR__ . DIRECTORY_SEPARATOR . 'framework';
+// if (!file_exists($rootpath . DIRECTORY_SEPARATOR . $namespace)) {
+//     mkdir($rootpath . DIRECTORY_SEPARATOR . $namespace, 0777, true);
+// }
+// $content = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . "mould/$type.lm");
+// $content = str_replace('REPLACENAMESPACE', $namespace, $content);
+// $content = str_replace('REPLACECLASSNAME', $name, $content);
+// file_put_contents($rootpath . DIRECTORY_SEPARATOR . $argv[2] . '.php', $content);
