@@ -31,14 +31,15 @@ class EnvironmentProvider extends ServerProvideAbstract
      */
     public function getFile()
     {
-        $file = new Filesystem;
+        
         if (Filesystem::has($filename = $this->app['app.envPath'] . $this->app->getEnvironmentFileName())) {
-            foreach ($file->getLine($filename) as $content) {
+            $file = new Filesystem($filename);
+            foreach ($file->line() as $content) {
                 // 跳过注释内容
                 if (strpos($content, '#') === 0 || strpos($content, '=') === false) continue;
                 $this->setEnv(...explode('=', $content, 2));
             }
-            $file->close();
+            $file = null;
         }
     }
 

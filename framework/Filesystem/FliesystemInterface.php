@@ -10,69 +10,63 @@ namespace Core\Filesystem;
 interface FilesystemInterface
 {
     /**
-     * 判断是否存在
-     * @param string $filename
-     * @return bool
-     * If I can go death, I will
+     * 构造函数
+     * @param string $file
+     * Real programmers don't read comments, novices do
      */
-    public static function has(string $filename);
+    public function __construct($file);
 
     /**
-     * 获取文件内容
-     * @param string $filename
-     * @param bool $lock
-     * @return string
-     * If I can go death, I will
+     * 获取资源句柄
+     * @return void
+     * Real programmers don't read comments, novices do
      */
-    public function get(string $filename, bool $lock = false);
+    public function getFileHandle();
 
     /**
-     * 按行读取文件内容
-     * @param string $filename
+     * 通过yeild实现同步行读写
      * @param bool $lock
      * @return \Generator
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
-    public function getLine(string $filename, bool $lock = false);
+    public function line(bool $lock = false);
+    
     /**
-     * 向目标文件写入内容
-     * @param string $filename
+     * 读取内容
+     * @param bool $lock
+     * @return string
+     * Real programmers don't read comments, novices do
+     */
+    public function get(bool $lock = false);
+
+    /**
+     * 写入内容
      * @param mixed $data
+     * @param bool $lock
      * @return void
-     * If I can go death, I will
+     * Real programmers don't read comments, novices do
      */
-    public function put(string $filename, $data, $locl = false);
-
+    public function put($data, bool $lock = false);
+    
     /**
-     * 移动文件
-     * @param string $source
-     * @param string $target
-     * @return bool
-     * If I can go death, I will
+     * 析构函数
+     * Real programmers don't read comments, novices do
      */
-    public static function move(string $source, string $target);
-
-    /**
-     * 复制文件
-     * @param string $source
-     * @param string $target
-     * @return bool
-     * If I can go death, I will
-     */
-    public static function copy(string $source, string $target);
-
-    /**
-     * 删除文件
-     * @param string $target
-     * @return bool
-     * If I can go death, I will
-     */
-    public static function delete(string $target);
-
+    public function __destruct();
+    
     /**
      * 关闭资源句柄
      * @return void
      * Real programmers don't read comments, novices do
      */
     public function close();
+
+    /**
+     * 判断是否存在文件
+     * @param string $filepath
+     * @return bool
+     * Real programmers don't read comments, novices do
+     */
+    public static function has(string $filepath);
+    
 }
