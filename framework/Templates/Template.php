@@ -23,28 +23,66 @@ class Template
      * @var string
      * Real programmers don't read comments, novices do
      */
-    protected $suffix = '.lm.php';
+    protected $suffix       = '.lm.php';
 
-    protected $cache_suffix = '.lm.php';
+    /**
+     * 编译后文件后缀名
+     * @var string
+     * Real programmers don't read comments, novices do
+     */
+    protected $cache_suffix = '.html';
 
+    /**
+     * 缓存过期时间 秒
+     * @var int
+     * Real programmers don't read comments, novices do
+     */
+    protected $cache_time = 86400;
+
+    /**
+     * 构造函数
+     * @param \Core\Application $app
+     * @param \Core\Templates\CompileTemplate $compile
+     * Real programmers don't read comments, novices do
+     */
     public function __construct(Application $app, CompileTemplate $compile)
     {
         $this->compile = $compile;
         $this->app     = $app;
     }
 
-    public function show($template)
+    /**
+     * 显示模板
+     * @param string $template
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
+    public function show(string $template)
     {
-        $source_file_name = str_replace('.', DIRECTORY_SEPARATOR, $template);
-
+        $source_file_name = $this->app->make('app.viewPath') . str_replace('.', DIRECTORY_SEPARATOR, $template) . $this->suffix;
         // 检查是否存在文件
-        if (!Filesystem::has(
-            $this->app->make('app.viewPath') . $source_file_name . $this->suffix
-        )) { 
+        if (!Filesystem::has($source_file_name)) {
             throw new TemplateNotFoundException("Not found the $template");
         }
-        $file_name = sha1($source_file_name);
+        $file_name = $this->app->getConfig('base.templates') . DIRECTORY_SEPARATOR . sha1_file($source_file_name) . $this->cache_suffix;
 
         // 检查模板是否存在
+        if (!Filesystem::has($file_name)) {
+            /**
+             * 编译模板
+             */
+            $this->compile->compile($source_file_name, $file_name);
+        } else {
+            // 检查缓存是否到期
+            if(time()- filectime($file_name) > $this->cache_time)
+            {
+                /**
+                 * 编译模板
+                 */
+                $this->compile->compile($source_file_name, $file_name);
+            }
+        }
+
+        readfile($file_name);
     }
 }

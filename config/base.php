@@ -32,9 +32,14 @@ return [
     'ssl_password' => '',
 
     /**
-     * 日志存放地址 
-     * Log storage
+     * 日志存放位置
+     * Log storage location
      */
-    'log_storage'  => __ROOT__.'storage/logs',
+    'log_storage'  => __ROOT__ . 'storage/logs',
 
+    /**
+     * 模板视图存放位置
+     * Template View storage location
+     */
+    'templates'    => __ROOT__ . 'storage/cache/templates',
 ];
