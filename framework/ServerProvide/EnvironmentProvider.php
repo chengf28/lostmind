@@ -20,8 +20,10 @@ class EnvironmentProvider extends ServerProvideAbstract
      */
     public function start()
     {
-        
         $this->getFile();
+        // 创建环境需要目录
+
+        $this->mkEnvdir();
     }
 
     /**
@@ -31,7 +33,7 @@ class EnvironmentProvider extends ServerProvideAbstract
      */
     public function getFile()
     {
-        
+
         if (Filesystem::has($filename = $this->app['app.envPath'] . $this->app->getEnvironmentFileName())) {
             $file = new Filesystem($filename);
             foreach ($file->line() as $content) {
@@ -55,5 +57,22 @@ class EnvironmentProvider extends ServerProvideAbstract
         function_exists('apache_setenv') && apache_setenv($key, $value);
         function_exists('putenv') && putenv("{$key}={$value}");
         $_ENV[$key] = $value;
+    }
+
+    /**
+     * 创建目录
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
+    protected function mkEnvdir()
+    {
+
+        if (!Filesystem::has($log_dir = $this->app->getConfig('base.log_storage'))) {
+            Filesystem::dir($log_dir);
+        }
+        if (!Filesystem::has($templates_dir = $this->app->getConfig('base.templates_storage'))) {
+            Filesystem::dir($templates_dir);
+        }
+        unset($log_dir, $templates_dir);
     }
 }

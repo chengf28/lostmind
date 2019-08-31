@@ -69,4 +69,13 @@ interface FilesystemInterface
      */
     public static function has(string $filepath);
     
+    /**
+     * 创建目录
+     * @param string $dirpath
+     * @param int $mode
+     * @param bool $recursive
+     * @return bool
+     * Real programmers don't read comments, novices do
+     */
+    public static function dir(string $dirpath, $mode = 0777, $recursive = false);
 }

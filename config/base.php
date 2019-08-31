@@ -41,5 +41,5 @@ return [
      * 模板视图存放位置
      * Template View storage location
      */
-    'templates'    => __ROOT__ . 'storage/cache/templates',
+    'templates_storage'    => __ROOT__ . 'storage/cache/templates',
 ];

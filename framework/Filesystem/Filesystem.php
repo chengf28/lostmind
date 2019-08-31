@@ -30,7 +30,7 @@ class Filesystem implements FilesystemInterface
     public function getFileHandle($mode = null)
     {
         if (!$this->fd) {
-            $this->fd = fopen($this->file,$mode);
+            $this->fd = fopen($this->file, $mode);
         }
         return $this->fd;
     }
@@ -49,7 +49,7 @@ class Filesystem implements FilesystemInterface
             // 如果写入
             $write = yield $line;
             if ($write) {
-                fputs($this->fd,$write);
+                fputs($this->fd, $write);
             }
         }
         $lock && flock($this->fd, LOCK_UN);
@@ -81,7 +81,7 @@ class Filesystem implements FilesystemInterface
     {
         $this->getFileHandle('wb+');
         $lock && flock($this->fd, LOCK_EX);
-        fputs($this->fd,$data);
+        fputs($this->fd, $data);
         $lock && flock($this->fd, LOCK_UN);
     }
 
@@ -116,5 +116,18 @@ class Filesystem implements FilesystemInterface
     public static function has(string $filepath)
     {
         return file_exists($filepath);
+    }
+
+    /**
+     * 创建目录
+     * @param string $dirpath
+     * @param int $mode
+     * @param bool $recursive
+     * @return bool
+     * Real programmers don't read comments, novices do
+     */
+    public static function dir(string $dirpath, $mode = 0777, $recursive = false)
+    {
+        return mkdir($dirpath, $mode, $recursive);
     }
 }

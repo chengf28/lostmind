@@ -64,7 +64,7 @@ class Template
         if (!Filesystem::has($source_file_name)) {
             throw new TemplateNotFoundException("Not found the $template");
         }
-        $file_name = $this->app->getConfig('base.templates') . DIRECTORY_SEPARATOR . sha1_file($source_file_name) . $this->cache_suffix;
+        $file_name = $this->app->getConfig('base.templates_storage') . DIRECTORY_SEPARATOR . sha1_file($source_file_name) . $this->cache_suffix;
 
         // 检查模板是否存在
         if (!Filesystem::has($file_name)) {
