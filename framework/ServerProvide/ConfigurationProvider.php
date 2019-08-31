@@ -18,13 +18,6 @@ class ConfigurationProvider extends ServerProvideAbstract
      */
     public function start()
     {
-        foreach (glob($this->app['app.configPath'] . '*.php') as $file) 
-        {
-            $this->app->setConfig(
-                basename($file, '.php'),
-                include $file
-            );
-        }
         $this->getBaseConfig();
         $this->prepareDBconfig();
     }
