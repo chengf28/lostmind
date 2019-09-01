@@ -15,8 +15,15 @@ class CompileTemplate
         $file       = new Filesystem($source);
         $targe_file = new Filesystem($targe);
         foreach ( $file->line() as $value) {
-            // 标签解析TODO
-            $targe_file->put($value);
+            /**
+             * 替换变量
+             */
+            $rep = preg_replace(
+                '~\{\{(\$[A-Za-z0-9\-_]+?)\}\}~x',
+                '<?php echo $1; ?>',
+                $value
+            );
+            $targe_file->put($rep);
         }
         unset($file,$targe_file);
     }

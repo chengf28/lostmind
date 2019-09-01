@@ -64,25 +64,27 @@ class Template
         if (!Filesystem::has($source_file_name)) {
             throw new TemplateNotFoundException("Not found the $template");
         }
-        $file_name = $this->app->getConfig('base.templates_storage') . DIRECTORY_SEPARATOR . sha1_file($source_file_name) . $this->cache_suffix;
+        $target_file_name = $this->app->getConfig('base.templates_storage') . DIRECTORY_SEPARATOR . sha1_file($source_file_name) . $this->cache_suffix;
 
-        // 检查模板是否存在
-        if (!Filesystem::has($file_name)) {
+        /**
+         * 检查模板是否存在
+         */
+        if (!Filesystem::has($target_file_name)) {
             /**
              * 编译模板
              */
-            $this->compile->compile($source_file_name, $file_name);
+            $this->compile->compile($source_file_name, $target_file_name);
         } else {
-            // 检查缓存是否到期
-            if(time()- filectime($file_name) > $this->cache_time)
-            {
+            /**
+             * 检查缓存是否到期
+             */
+            if (time() - filectime($target_file_name) > $this->cache_time) {
                 /**
                  * 编译模板
                  */
-                $this->compile->compile($source_file_name, $file_name);
+                $this->compile->compile($source_file_name, $target_file_name);
             }
         }
-
-        readfile($file_name);
+        readfile($target_file_name);
     }
 }
