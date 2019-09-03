@@ -73,6 +73,17 @@ class Application extends Container
             as $abstract => $concrete) {
             $this->singleBind($abstract, $concrete);
         }
+
+
+        /**
+         * 绑定
+         */
+        foreach ([
+            'view' => \Core\Templates\Template::class,
+        ] as $abstract => $concrete) 
+        {
+            $this->bind($abstract,$concrete);
+        }
     }
 
     /**
