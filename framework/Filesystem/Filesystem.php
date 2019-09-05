@@ -2,14 +2,12 @@
 
 namespace Core\Filesystem;
 
-use Core\Exception\Filesystem\FileNotFoundException;
-
 /**
  * 文件操作系统
  * @author chengf28 <chengf_28@163.com>
  * Real programmers don't read comments, novices do
  */
-class Filesystem implements FilesystemInterface
+class Filesystem
 {
     protected $fd;
     /**
@@ -20,6 +18,17 @@ class Filesystem implements FilesystemInterface
     public function __construct($file)
     {
         $this->file = $file;
+    }
+
+    /**
+     * 清除内容
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
+    public function clean()
+    {
+        $this->getFileHandle('w+');
+        ftruncate($this->fd, 0);
     }
 
     /**
@@ -43,16 +52,21 @@ class Filesystem implements FilesystemInterface
      */
     public function line(bool $lock = false)
     {
-        $this->getFileHandle('rwb+');
+        $this->getFileHandle('r+');
         $lock && flock($this->fd, LOCK_EX);
         while ($line = fgets($this->fd)) {
-            // 如果写入
-            $write = yield $line;
-            if ($write) {
-                fputs($this->fd, $write);
-            }
+            yield $line;
         }
         $lock && flock($this->fd, LOCK_UN);
+    }
+
+    public function arrayPut(bool $lock = false)
+    {
+        $this->getFileHandle('w+');
+        $lock && flock($this->fd, LOCK_EX);
+        while (true) {
+            fwrite($this->fd, yield);
+        }
     }
 
     /**
@@ -79,9 +93,9 @@ class Filesystem implements FilesystemInterface
      */
     public function put($data, bool $lock = false)
     {
-        $this->getFileHandle('wb+');
+        $this->getFileHandle('w+');
         $lock && flock($this->fd, LOCK_EX);
-        fputs($this->fd, $data);
+        fwrite($this->fd, $data);
         $lock && flock($this->fd, LOCK_UN);
     }
 

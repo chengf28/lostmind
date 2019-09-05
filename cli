@@ -8,19 +8,25 @@
 |---------------------------------------
 | 
 */
-$operate = $argv[1];
-switch ($operate) {
-    case '-s':
-    case '-S':
-        $port   = isset($argv[2]) ? $argv[2] : '80';
-        $string = 'php -S localhost:'.$port . (isset($argv[3]) ? $argv[3] : ' ./public/index.php');
-        `$string`;
-        break;
-    
-    default:
-        # code...
-        break;
+if ($argv[1]) {
+    $operate = $argv[1];
+    switch ($operate) {
+        case '-s':
+        case '-S':
+            $port   = isset($argv[2]) ? $argv[2] : '80';
+            $string = 'php -S localhost:'.$port . (isset($argv[3]) ? $argv[3] : ' ./public/index.php');
+            `$string`;
+            break;
+        case 'clean':
+            foreach(glob('./storage/cache/templates/*') as $file)
+            {
+                unlink($file);
+            }
+            echo "done";
+            break;
+    }
 }
+
 
 
 

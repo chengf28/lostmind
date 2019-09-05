@@ -66,12 +66,11 @@ class EnvironmentProvider extends ServerProvideAbstract
      */
     protected function mkEnvdir()
     {
-
         if (!Filesystem::has($log_dir = $this->app->getConfig('base.log_storage'))) {
-            Filesystem::dir($log_dir);
+            Filesystem::dir($log_dir, 0777, true);
         }
         if (!Filesystem::has($templates_dir = $this->app->getConfig('base.templates_storage'))) {
-            Filesystem::dir($templates_dir);
+            Filesystem::dir($templates_dir, 0777, true);
         }
         unset($log_dir, $templates_dir);
     }

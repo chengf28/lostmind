@@ -20,11 +20,11 @@ return [
         /**
          * 端口号
          */
-        'port'        => '3306',
+        'port'        => '3300',
         /**
          * 数据库名
          */
-        'database'    => 'lostmind',
+        'database'    => 'write_test',
         /**
          * 数据库用户名 
          */

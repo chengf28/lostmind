@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-
+@extends(test.head)
+@stack(aaa)
 <body>
     <div>
-        {{$test}}
+        <div>{{$test}}</div>
         FUCK the world
     </div>
 </body>
