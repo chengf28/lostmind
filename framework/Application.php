@@ -32,7 +32,7 @@ class Application extends Container
         $this->instances('app.rootPath', $this->rootPath);
         $this->instances('app.envPath', $this->rootPath);
         $this->instances('app.configPath', $this->rootPath . 'config' . DIRECTORY_SEPARATOR);
-        $this->instances('app.viewPath', $this->rootPath . 'views' . DIRECTORY_SEPARATOR);
+        $this->setConfig('base.viewPath', $this->rootPath . 'views' . DIRECTORY_SEPARATOR);
     }
 
     /**
@@ -79,10 +79,9 @@ class Application extends Container
          * 绑定
          */
         foreach ([
-            'view' => \Core\Templates\Template::class,
-        ] as $abstract => $concrete) 
-        {
-            $this->bind($abstract,$concrete);
+            'view' => \Core\Templates\View::class,
+        ] as $abstract => $concrete) {
+            $this->bind($abstract, $concrete);
         }
     }
 
@@ -133,7 +132,19 @@ class Application extends Container
      */
     public function setConfig(string $key, $value)
     {
-        $this->config[$key] = $value;
+        $key = explode('.', $key, 2);
+        if (count($key) == 2) {
+            $arr_key = $key[1];
+            $name    = $key[0];
+        } else {
+            $arr_key = null;
+            $name    = $key[0];
+        }
+        if ($arr_key) {
+            $this->config[$name][$arr_key] = $value;
+        }else{
+            $this->config[$name] = $value;
+        }
     }
 
     /**
@@ -145,19 +156,20 @@ class Application extends Container
     public function getConfig(string $key = null)
     {
         $key = explode('.', $key, 2);
-        if (count($key) == 2) 
-        {
-            $arr_key  = $key[1];
-            $name = $key[0];
-        }else {
-            $name  = $key[0];
+        if (count($key) == 2) {
+            $arr_key = $key[1];
+            $name    = $key[0];
+        } else {
+            $name    = $key[0];
             $arr_key = null;
         }
         if (!isset($this->config[$name])) {
             $this->loadConfig($name);
         }
-
         if ($arr_key) {
+            if (!isset($this->config[$name][$arr_key])) {
+                $this->loadConfig($name);
+            }
             return $this->config[$name][$arr_key];
         }
         return $this->config[$name] ?? [];
@@ -173,7 +185,11 @@ class Application extends Container
     {
         $path = $this->instances['app.configPath'] . $name . '.php';
         if (file_exists($path)) {
-            $this->config[$name] = include($path);
+            
+            $this->config[$name] = array_merge(
+                isset($this->config[$name])?$this->config[$name] : [],
+                include($path)
+            );
         }
     }
 }

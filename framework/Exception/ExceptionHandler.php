@@ -19,7 +19,7 @@ class ExceptionHandler
      */
     public function __construct(Application $app)
     {
-        error_reporting(0);
+        // error_reporting(0);
         // 设置自定义错误处理
         set_error_handler([$this, 'ErrorHandler']);
         // 设置自定义异常处理

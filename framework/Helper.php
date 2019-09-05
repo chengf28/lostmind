@@ -3,11 +3,13 @@
 use Core\Facade\App;
 use Core\Facade\View;
 
-/**
- * 获取View类
- */
 if (!function_exists('view')) {
-    function view($path, $data = null)
+    /**
+     * 获取View类
+     * @param string $path
+     * @param array $data
+     */
+    function view(string $path,array $data = null)
     {
         if ($data) {
             return View::with($data)->show($path);
@@ -16,11 +18,12 @@ if (!function_exists('view')) {
     }
 }
 
-/**
- * 获取Request 类
- */
 if (!function_exists('request')) {
-    function request($key = null)
+    /**
+     * 获取Request 类
+     * @param string $key
+     */
+    function request(string $key = null)
     {
         $request = App::make('Request');
         if ($key) {
@@ -30,14 +33,13 @@ if (!function_exists('request')) {
     }
 }
 
-
-if (!function_exists('App')) {
-    function App($key = null)
+if (!function_exists('config')) {
+    /**
+     * 读取参数
+     * @param string $key
+     */
+    function config(string $key)
     {
-        $app = App::make('app');
-        if ($key) {
-            return $app->getConfig('base.'.$key);
-        }
-        return $app;
+        return App::make('app')->getConfig($key);
     }
 }
