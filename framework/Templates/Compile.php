@@ -14,9 +14,14 @@ use Core\Exception\Filesystem\TemplateNotFoundException;
  */
 class Compile
 {
-    protected $suffix = '.lm.php';
+    protected $suffix       = '.lm.php';
 
     protected $cache_suffix = '.php';
+
+    protected $methods = [
+        'extends',
+        'section'
+    ];
 
     public function getSouceName(string &$filename)
     {
@@ -25,7 +30,7 @@ class Compile
 
     public function getTargetName(string $filename)
     {
-        return config('base.templates_storage') . DIRECTORY_SEPARATOR . sha1_file($filename) . $this->cache_suffix;
+        return config('base.templates_storage') . DIRECTORY_SEPARATOR . sha1($filename) . $this->cache_suffix;
     }
 
     public function compile($source)
@@ -33,18 +38,12 @@ class Compile
         $this->getSouceName($source);
         $target = $this->getTargetName($source);
         if (!Filesystem::has($target)) {
-            $source = new Filesystem($source);
-            foreach ($source->line() as $ctx) {
-                if (strpos($ctx,'{{') !== false) {
-                    $ctx = $this->parse($ctx);
-                }
-
-                var_dump($ctx);
-            }
+            $content = (new Filesystem($source))->get();
+            var_dump($content);
         }
     }
 
-    public function parse($content)
+    public function variablesParse($content)
     {
         return preg_replace(
             [
@@ -57,5 +56,33 @@ class Compile
             ],
             $content
         );
+    }
+
+    public function methodsParse($content)
+    {
+        if (
+            !preg_match(
+                '~\@([A-Za-z]+?)\(([A-Za-z0-9_\-\>\'\"\[\]\.]*)\)~x',
+                $content,
+                $res
+            )
+        ) {
+            return $content;
+        }
+
+        if (!in_array($res[1], $this->methods)) {
+            return $content;
+        }
+
+        $this->{$res[1]}($res[2]);
+    }
+
+    public function extends(){
+
+    }
+
+    public function section()
+    {
+
     }
 }

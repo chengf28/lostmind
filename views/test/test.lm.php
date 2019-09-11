@@ -1,10 +1,9 @@
 @extends(test.head)
-@stack(aaa)
+@section('body')
 <body>
     <div>
         <div>{{$test}}</div>
         FUCK the world
     </div>
 </body>
-
-</html>
+@endsection

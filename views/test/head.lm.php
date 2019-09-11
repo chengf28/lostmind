@@ -7,3 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ Appp(asd)[test['test']]->test }}</title>
 </head>
+@section('body')
+@endsection
+</html>
