@@ -2,9 +2,8 @@
 
 namespace Core\Templates;
 
-use Core\Application;
+use Core\Exception\Templates\InvalidTemplateArgException;
 use Core\Filesystem\Filesystem;
-use Core\Exception\Filesystem\TemplateNotFoundException;
 
 /**
  * 模板编译类
@@ -14,75 +13,111 @@ use Core\Exception\Filesystem\TemplateNotFoundException;
  */
 class Compile
 {
-    protected $suffix       = '.lm.php';
 
-    protected $cache_suffix = '.php';
+    protected $footers;
 
     protected $methods = [
         'extends',
-        'section'
+        'section',
+        'endsection'
     ];
 
-    public function getSouceName(string &$filename)
+    public function compile($source, $target)
     {
-        $filename = config('base.viewPath') . str_replace('.', DIRECTORY_SEPARATOR, $filename) . $this->suffix;
-    }
-
-    public function getTargetName(string $filename)
-    {
-        return config('base.templates_storage') . DIRECTORY_SEPARATOR . sha1($filename) . $this->cache_suffix;
-    }
-
-    public function compile($source)
-    {
-        $this->getSouceName($source);
-        $target = $this->getTargetName($source);
-        if (!Filesystem::has($target)) {
-            $content = (new Filesystem($source))->get();
-            var_dump($content);
+        $this->footers = [];
+        $content = (new Filesystem($source))->get();
+        $this->compileVars($content);
+        $this->compileStatements($content);
+        foreach ($this->footers as $footer) {
+            $content .= "\t{$footer}";
         }
+        (new Filesystem($target))->put($content);
     }
 
-    public function variablesParse($content)
+    /**
+     * 处理变量及函数
+     * @param string $content
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
+    public function compileVars(string &$content)
     {
-        return preg_replace(
+        $content = preg_replace(
             [
-                '~\{\{\s*\$([A-Za-z_\x7f-\xff][A-Za-z_\-\x7f-\xff\>]*)\s*\}\}~x',
-                '~\{\{\s*([A-Za-z_\x7f-\xff\-0-9\>]+?\([A-Za-z_\-\x7f-\xff\>\'\"]*\)(?=\-\>|\:\:|)[\[\]A-Za-z0-9\'\"\>\-]*)\s*\}\}~x'
+                '~\{\{
+                    \s*
+                        \$
+                        ([A-Za-z_\x7f-\xff][A-Za-z_\-\x7f-\xff\>]*)
+                    \s*
+                \}\}~x',
+                '~\{\{
+                    \s*
+                    (
+                        [
+                            A-Za-z_\x7f-\xff\-0-9\>
+                        ]+?\([A-Za-z_\-\x7f-\xff\>\'\"]*\)
+                        (?=\-\>|\:\:|)?
+                        [
+                            \[\]A-Za-z0-9\'\"\>\-
+                        ]*
+                    )
+                    \s*
+                \}\}~x'
             ],
             [
-                '<?php echo $1;?>',
+                '<?php echo $$1;?>',
                 '<?php echo $1;?>',
             ],
             $content
         );
+        unset($content);
     }
 
-    public function methodsParse($content)
+    public function compileStatements(string &$content)
     {
-        if (
-            !preg_match(
-                '~\@([A-Za-z]+?)\(([A-Za-z0-9_\-\>\'\"\[\]\.]*)\)~x',
-                $content,
-                $res
-            )
-        ) {
-            return $content;
-        }
-
-        if (!in_array($res[1], $this->methods)) {
-            return $content;
-        }
-
-        $this->{$res[1]}($res[2]);
+        $content = preg_replace_callback(
+            '~\@(?>([A-Za-z]+))[\t]*
+                (?:
+                    \(
+                        [\'\"]*
+                        ([A-Za-z0-9_\-\>\[\]\.]*)?
+                        [\'\"]*
+                    \)?
+                )?
+            ~x',
+            [$this, 'compileStatement'],
+            $content
+        );
+        unset($content);
     }
 
-    public function extends(){
-
-    }
-
-    public function section()
+    protected function compileStatement($match)
     {
+        if (in_array($match[1], $this->methods)) {
+            return $this->{'compile' . ucfirst($match[1])}($match);
+        }
+        return $match[0];
+    }
 
+    protected function compileExtends(array $match)
+    {
+        if (!isset($match[2]) || empty($match[2])) {
+            throw new InvalidTemplateArgException($match[1] . '() expects at least 1 parameters, 0 given');
+        }
+        $this->footers[] = "<?php \$this->show('{$match[2]}'); ?>";
+        return;
+    }
+
+    protected function compileSection(array $match)
+    {
+        if (!isset($match[2]) || empty($match[2])) {
+            throw new InvalidTemplateArgException($match[1] . '() expects at least 1 parameters, 0 given');
+        }
+        return "<?php \$this->section('{$match[2]}'); ?>";
+    }
+
+    protected function compileEndsection(array $match)
+    {
+        return "<?php \$this->sectionEnd(); ?>";
     }
 }

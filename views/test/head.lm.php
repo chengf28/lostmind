@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ Appp(asd)[test['test']]->test }}</title>
+    <title>{{ config('base.name') }}</title>
 </head>
 @section('body')
 @endsection

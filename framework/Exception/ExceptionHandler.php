@@ -60,6 +60,7 @@ class ExceptionHandler
      */
     public function ExcepHandler(\Throwable $e)
     {
+        ob_clean();
         if ($this->app->getConfig('base.debug')) {
             $exceptionName = get_class($e) . ':';
             $msg           = htmlentities($e->getMessage());
@@ -190,4 +191,5 @@ class ExceptionHandler
         </html>
 HTML;
     }
+
 }

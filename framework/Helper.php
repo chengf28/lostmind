@@ -40,6 +40,6 @@ if (!function_exists('config')) {
      */
     function config(string $key)
     {
-        return App::make('app')->getConfig($key);
+        return App::getConfig($key);    
     }
 }

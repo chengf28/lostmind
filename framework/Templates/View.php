@@ -2,6 +2,8 @@
 
 namespace Core\Templates;
 
+use Core\Exception\Templates\TemplateNotFoundException;
+use Core\Filesystem\Filesystem;
 use Core\Templates\Compile;
 
 /**
@@ -13,6 +15,14 @@ use Core\Templates\Compile;
 class View
 {
     protected $values;
+
+    protected $suffix       = '.lm.php';
+
+    protected $cache_suffix = '.php';
+
+    protected $sections      = [];
+
+    protected $sectionsStack = [];
 
     /**
      * 编译模板
@@ -34,16 +44,72 @@ class View
      */
     public function with(array $args)
     {
-        array_walk($args,function($value,$key){
+        array_walk($args, function ($value, $key) {
             $this->values[$key] = $value;
         });
         return $this;
     }
 
-    
     public function show(string $template_name)
     {
-        // $this->compile->check($template_name);
-        $this->compile->compile($template_name);
+        list($source, $target) = $this->getComplieName($template_name);
+        if (!Filesystem::has($source)) {
+            throw new TemplateNotFoundException($source,$this->suffix);
+        }
+        /**
+         * 判断编译文件是否存在
+         */
+        if (Filesystem::has($target)) {
+            /**
+             * 判断是否最后编译时与当前模板编译时间
+             */
+            if (filemtime($source) > filemtime($target)) {
+                /**
+                 * 编译
+                 */
+                $this->compile($source,$target);
+            }
+        }else{
+            /**
+             * 编译
+             */
+            $this->compile($source, $target);
+        }
+        extract($this->values);
+        include $target;
+    }
+
+
+    public function compile($source, $traget)
+    {
+        $this->compile->compile($source, $traget);
+    }
+
+    /**
+     * 通过模板名获取到完整的源文件路径及编译后的模板名
+     * @param string $filename
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
+    public function getComplieName(string $filename)
+    {
+        return [
+            config('base.viewPath') . str_replace('.', DIRECTORY_SEPARATOR, $filename) . $this->suffix,
+            config('base.templates_storage') . DIRECTORY_SEPARATOR . sha1($filename) . $this->cache_suffix
+        ];
+    }
+
+    public function section(string $name){
+        if(ob_start())
+            $this->sectionsStack[] = $name;
+    }
+
+    public function sectionEnd()
+    {
+        $section = array_pop($this->sectionsStack);
+        if (isset($this->sections[$section])) {
+
+        }
+        $this->sections[$section] = ob_get_clean();
     }
 }

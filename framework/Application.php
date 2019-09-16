@@ -28,6 +28,7 @@ class Application extends Container
         // 存入实例
         $this->bind('app', Application::class);
         $this->instances(Application::class, $this);
+        $this->instances('app',$this);
         // 错误与异常处理注册
         $this->instances('ExcepthonHandler', new \Core\Exception\ExceptionHandler($this));
         $this->instances('app.rootPath', $this->rootPath);
