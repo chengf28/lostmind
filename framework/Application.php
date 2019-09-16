@@ -3,6 +3,7 @@
 namespace Core;
 
 use Core\Container\Container;
+use Core\Exception\Filesystem\FileNotFoundException;
 
 /**
  * 框架核心
@@ -157,8 +158,8 @@ class Application extends Container
     {
         $key = explode('.', $key, 2);
         if (count($key) == 2) {
-            $arr_key = $key[1];
             $name    = $key[0];
+            $arr_key = $key[1];
         } else {
             $name    = $key[0];
             $arr_key = null;
@@ -176,7 +177,7 @@ class Application extends Container
     }
 
     /**
-     * 加载配置文件到内存中
+     * 加载配置文件到堆栈中
      * @param string $name
      * @return void
      * Real programmers don't read comments, novices do
@@ -190,6 +191,8 @@ class Application extends Container
                 isset($this->config[$name])?$this->config[$name] : [],
                 include($path)
             );
+        }else{
+            throw new FileNotFoundException($path);
         }
     }
 }
