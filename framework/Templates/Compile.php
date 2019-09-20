@@ -13,7 +13,6 @@ use Core\Filesystem\Filesystem;
  */
 class Compile
 {
-
     protected $footers;
 
     protected $methods = [
@@ -29,7 +28,7 @@ class Compile
         $this->compileVars($content);
         $this->compileStatements($content);
         foreach ($this->footers as $footer) {
-            $content .= "\t{$footer}";
+            $content .= "\n{$footer}";
         }
         (new Filesystem($target))->put($content);
     }
@@ -46,8 +45,7 @@ class Compile
             [
                 '~\{\{
                     \s*
-                        \$
-                        ([A-Za-z_\x7f-\xff][A-Za-z_\-\x7f-\xff\>]*)
+                        (\$[A-Za-z_\x7f-\xff][A-Za-z_\-\x7f-\xff\>]*)
                     \s*
                 \}\}~x',
                 '~\{\{
@@ -55,18 +53,16 @@ class Compile
                     (
                         [
                             A-Za-z_\x7f-\xff\-0-9\>
-                        ]+?\([A-Za-z_\-\x7f-\xff\>\'\"]*\)
-                        (?=\-\>|\:\:|)?
-                        [
-                            \[\]A-Za-z0-9\'\"\>\-
-                        ]*
+                        ]+?\(([A-Za-z_\-\x7f-\xff\>\'\"\.]*)\)
+                        (?:\:\:|\-\>)?
+                        (?2)
                     )
                     \s*
                 \}\}~x'
             ],
             [
-                '<?php echo $$1;?>',
-                '<?php echo $1;?>',
+                '<?php echo $1; ?>',
+                '<?php echo $1; ?>',
             ],
             $content
         );

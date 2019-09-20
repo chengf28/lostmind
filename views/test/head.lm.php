@@ -9,4 +9,6 @@
 </head>
 @section('body')
 @endsection
+
 </html>
+
