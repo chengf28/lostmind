@@ -60,6 +60,9 @@ class DBmanage
         $config       = $this->app->getConfig('DBconfig');
         try {
             $connect = new Connect;
+            #-----------------------------
+            # 同时创建读,写2个PDO资源,并传递到Connect类中
+            #-----------------------------
             foreach (['write', 'read'] as  $value) {
                 if (!$hasSelect) {
                     $this->select[$value] = array_rand($config[$value]['dsn'], 1);
@@ -73,9 +76,11 @@ class DBmanage
                     )
                 );
             }
-
             $this->connect = $connect;
         } catch (Throwable $e) {
+            /**
+             * 抛出创建失败异常
+             */
             throw new CreateConnectException($e->getMessage(), $e->getCode(), $e);
         }
     }
