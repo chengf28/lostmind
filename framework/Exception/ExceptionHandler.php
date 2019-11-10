@@ -8,14 +8,14 @@ use Core\Exception\FatalErrorException;
 /**
  * 异常处理
  * @author chengf28 <chengf_28@163.com>
- * If I can go death, I will
+ * Real programmers don't read comments, novices do
  */
 class ExceptionHandler
 {
     protected $app;
     /**
      * 初始化
-     * If I can go death, I will
+     * Real programmers don't read comments, novices do
      */
     public function __construct(Application $app)
     {
@@ -35,7 +35,7 @@ class ExceptionHandler
      * @param string $errfile
      * @param string $errline
      * @return void
-     * If I can go death, I will
+     * Real programmers don't read comments, novices do
      */
     public function ErrorHandler(int $errno, string $errstr, string $errfile, string $errline)
     {
@@ -56,7 +56,7 @@ class ExceptionHandler
      * 异常处理
      * @param \Throwable $e
      * @return void
-     * If I can go death, I will
+     * Real programmers don't read comments, novices do
      */
     public function ExcepHandler(\Throwable $e)
     {

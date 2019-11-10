@@ -1,6 +1,6 @@
 {
     "name": "chengf28/lostmind",
-    "description": "If I can go death, I will",
+    "description": "Real programmers don't read comments, novices do",
     "type": "project",
     "require": {
         "chengf28/dbquery": "^1.0.0",

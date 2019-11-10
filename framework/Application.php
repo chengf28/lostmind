@@ -20,7 +20,7 @@ class Application extends Container
     /**
      * 构造
      * @param string $path
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     public function __construct(string $path)
     {
@@ -40,7 +40,7 @@ class Application extends Container
     /**
      * 开始
      * @return \Core\Request\Request
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     public function start()
     {
@@ -58,7 +58,7 @@ class Application extends Container
     /**
      * 基础服务注册
      * @return void
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     protected function baseRegister()
     {
@@ -90,7 +90,7 @@ class Application extends Container
     /**
      * 加载初始化工具
      * @return void
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     protected function loadServerProvides()
     {
@@ -107,7 +107,7 @@ class Application extends Container
     /**
      * 获取配置文件名
      * @return string
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     public function getEnvironmentFileName()
     {
@@ -118,7 +118,7 @@ class Application extends Container
      * 设置环境文件名
      * @param string $filename
      * @return void
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     public function setEnvironmentFileName(string $filename)
     {
@@ -130,7 +130,7 @@ class Application extends Container
      * @param string $key
      * @param mixed $value
      * @return void
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     public function setConfig(string $key, $value)
     {
@@ -153,7 +153,7 @@ class Application extends Container
      * 获取配置文件
      * @param string $key
      * @return mixed
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     public function getConfig(string $key = null)
     {

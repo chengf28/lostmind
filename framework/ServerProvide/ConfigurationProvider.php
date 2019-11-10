@@ -14,7 +14,7 @@ class ConfigurationProvider extends ServerProvideAbstract
     /**
      * 开始
      * @return void
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     public function start()
     {
@@ -25,7 +25,7 @@ class ConfigurationProvider extends ServerProvideAbstract
     /**
      * 加载配置文件
      * @return void
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     protected function getBaseConfig()
     {

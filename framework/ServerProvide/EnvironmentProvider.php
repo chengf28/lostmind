@@ -16,7 +16,7 @@ class EnvironmentProvider extends ServerProvideAbstract
     /**
      * 开始
      * @return void
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     public function start()
     {
@@ -29,7 +29,7 @@ class EnvironmentProvider extends ServerProvideAbstract
     /**
      * 读取文件
      * @return void
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     public function getFile()
     {
@@ -50,7 +50,7 @@ class EnvironmentProvider extends ServerProvideAbstract
      * @param string $key
      * @param mixed $value
      * @return void
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     public function setEnv(string $key, $value)
     {

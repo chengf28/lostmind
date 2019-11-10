@@ -12,21 +12,21 @@ class Container implements \ArrayAccess
     /**
      * 绑定的类容器
      * @var array
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     protected $binds     = [];
 
     /**
      * 存放已经实例化好的类容器
      * @var array
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     protected $instances = [];
 
     /**
      * 参数
      * @var array
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     protected $withs     = [];
 
@@ -35,7 +35,7 @@ class Container implements \ArrayAccess
      * @param string $abstract
      * @param mixed $concrete
      * @return void
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     public function bind(string $abstract, $concrete)
     {
@@ -48,7 +48,7 @@ class Container implements \ArrayAccess
      * @param string $abstract
      * @param mixed $concrete
      * @return void
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     public function singleBind(string $abstract, $concrete)
     {
@@ -61,7 +61,7 @@ class Container implements \ArrayAccess
      * @param string $abstract
      * @param mixed $concrete
      * @return void
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     public function instances(string $abstract, $concrete)
     {
@@ -72,7 +72,7 @@ class Container implements \ArrayAccess
      * 实例化一个类
      * @param  mixed $abstract
      * @return mixed
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     public function make($abstract)
     {
@@ -84,7 +84,7 @@ class Container implements \ArrayAccess
      * @param mixed $abstract
      * @param array $parameters
      * @return mixed
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     public function makeWith($abstract, array $parameters = [])
     {
@@ -132,7 +132,7 @@ class Container implements \ArrayAccess
      * 获取到已经绑定的类的具体
      * @param string $abstract
      * @return mixed
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     protected function isBind(string $abstract)
     {
@@ -143,7 +143,7 @@ class Container implements \ArrayAccess
      * 获取到对应的实例
      * @param string $abstract
      * @return void
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     protected function getConcrete(string $abstract)
     {
@@ -154,7 +154,7 @@ class Container implements \ArrayAccess
      * 是否分享模式
      * @param string $abstract
      * @return bool
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     protected function isSingle(string $abstract)
     {
@@ -165,7 +165,7 @@ class Container implements \ArrayAccess
      * 是否存在在单例容器中
      * @param string $abstract
      * @return bool
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     protected function isInstance(string $abstract)
     {
@@ -176,7 +176,7 @@ class Container implements \ArrayAccess
      * 获取到单例
      * @param string $abstract
      * @return mixed
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     protected function getInstance(string $abstract)
     {
@@ -187,7 +187,7 @@ class Container implements \ArrayAccess
      * @param mixed $abstract
      * @param mixed $concrete
      * @return bool
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     protected function isBuildable($abstract, $concrete)
     {
@@ -199,7 +199,7 @@ class Container implements \ArrayAccess
      * 判断是否属于Closure
      * @param mixed $concrete
      * @return bool
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     private function isClosure($concrete)
     {
@@ -211,7 +211,7 @@ class Container implements \ArrayAccess
      * @param mixed $concrete
      * @param array $parameter
      * @return mixed
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     protected function build($concrete, array $parameter = [])
     {
@@ -259,7 +259,7 @@ class Container implements \ArrayAccess
     /**
      * 获取到最近的参数;
      * @return void
-     * IF I CAN GO DEATH, I WILL
+     * Real programmers don't read comments, novices do
      */
     protected function getFinalParameter()
     {
