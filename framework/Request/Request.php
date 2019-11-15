@@ -67,7 +67,7 @@ class Request implements \ArrayAccess, \Iterator
     {
         $this->app       = $app;
         $this->routes    = $routeCollection;
-        $this->uri       = $_SERVER['SCRIPT_NAME'];
+        $this->uri       = $_SERVER['REQUEST_URI'];
         $this->method    = $_SERVER['REQUEST_METHOD'];
         $this->namespace = 'App\Controllers\\';
         $args            = $_REQUEST;
