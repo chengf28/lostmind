@@ -60,7 +60,13 @@ class ExceptionHandler
      */
     public function ExcepHandler(\Throwable $e)
     {
-        ob_clean();
+        /**
+         * 当存在缓冲区时，清空缓冲区
+         */
+        if(ob_get_level())
+        {
+            ob_clean();
+        }
         if ($this->app->getConfig('base.debug')) {
             $exceptionName = get_class($e) . ':';
             $msg           = htmlentities($e->getMessage());
