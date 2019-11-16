@@ -8,7 +8,5 @@
     <title>{{ config('base.name') }}</title>
 </head>
 @section('body')
-@endsection
-
+@show
 </html>
-

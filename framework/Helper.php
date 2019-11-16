@@ -9,12 +9,12 @@ if (!function_exists('view')) {
      * @param string $path
      * @param array $data
      */
-    function view(string $path,array $data = null)
+    function view(string $path, array $data = null)
     {
         if ($data) {
-            return View::with($data)->show($path);
+            return View::with($data)->make($path)->get();
         }
-        return View::show($path);
+        return View::make($path)->get();
     }
 }
 
@@ -40,6 +40,6 @@ if (!function_exists('config')) {
      */
     function config(string $key)
     {
-        return App::getConfig($key);    
+        return App::getConfig($key);
     }
 }

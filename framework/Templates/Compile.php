@@ -18,7 +18,8 @@ class Compile
     protected $methods = [
         'extends',
         'section',
-        'endsection'
+        'stop',
+        'show',
     ];
 
     public function compile($source, $target)
@@ -112,8 +113,13 @@ class Compile
         return "<?php \$this->section('{$match[2]}'); ?>";
     }
 
-    protected function compileEndsection(array $match)
+    protected function compileStop()
     {
-        return "<?php \$this->sectionEnd(); ?>";
+        return "<?php \$this->endSection(); ?>";
+    }
+
+    protected function compileShow()
+    {
+        return "<?php \$this->showSection();?>";
     }
 }

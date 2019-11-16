@@ -2,10 +2,10 @@
 
 namespace Core\Templates;
 
-use Core\Exception\Templates\TemplateNotFoundException;
-use Core\Filesystem\Filesystem;
 use Core\Templates\Compile;
-use InvalidArgumentException;
+use Core\Filesystem\Filesystem;
+use Core\Templates\ViewContent;
+use Core\Exception\Templates\TemplateNotFoundException;
 
 /**
  * View类
@@ -21,9 +21,7 @@ class View
 
     protected $cache_suffix = '.php';
 
-    protected $sections      = [];
-
-    protected $sectionsStack = [];
+    protected $content;
 
     /**
      * 编译模板
@@ -32,9 +30,17 @@ class View
      */
     protected $compile;
 
-    public function __construct(Compile $compile)
+    /**
+     * ViewContent 存放模板内容
+     * @var \Core\Templates\ViewContent
+     * Real programmers don't read comments, novices do
+     */
+    protected $viewContent;
+
+    public function __construct(Compile $compile, ViewContent $content)
     {
-        $this->compile = $compile;
+        $this->compile     = $compile;
+        $this->viewContent = $content;
     }
 
     /**
@@ -76,20 +82,25 @@ class View
              */
             $this->compile($source, $target);
         }
-        extract($this->values);
-        ob_start();
-        $d = include $target;
-        $content =  ob_get_clean();
-        return $content;
+
+        if (!$this->content) {
+            $this->content = $this->viewContent->import($target, $this->values);
+        }
+        return $this;
     }
 
-    public function show(string $template_name)
+    public function get()
     {
-        $content = $this->make($template_name);
-        var_dump($content);
+        return $this->content;
     }
 
-
+    /**
+     * 编译模板
+     * @param string $source
+     * @param string $traget
+     * @return void
+     * Real programmers don't read comments, novices do
+     */
     public function compile($source, $traget)
     {
         $this->compile->compile($source, $traget);
@@ -109,21 +120,4 @@ class View
         ];
     }
 
-    public function section(string $name){
-        if(ob_start())
-            $this->sectionsStack[] = $name;
-    }
-
-    public function sectionEnd()
-    {
-        if (empty($this->sectionsStack)) {
-            throw new InvalidArgumentException("section has not ending tag");
-        }
-        $section = array_pop($this->sectionsStack);
-        if (isset($this->sections[$section])) {
-            return ob_get_clean() . $this->sections[$section];
-        }else{
-            $this->sections[$section] = ob_get_clean();
-        }
-    }
 }

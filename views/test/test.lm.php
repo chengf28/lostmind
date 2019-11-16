@@ -6,4 +6,4 @@
         FUCK the world
     </div>
 </body>
-@endsection
+@stop
