@@ -4,6 +4,7 @@ namespace Core\Exception;
 
 use Core\Application;
 use Core\Exception\FatalErrorException;
+use Core\Exception\Request\PageNotFoundException;
 
 /**
  * 异常处理
@@ -60,11 +61,71 @@ class ExceptionHandler
      */
     public function ExcepHandler(\Throwable $e)
     {
+        // 页面未找到
+        if($e instanceof PageNotFoundException)
+        {
+            $this->show404();
+        }else {
+            $this->showExceptionDetail($e);
+        } 
+        
+    }
+
+    protected function show404()
+    {
+        $html = <<<HTML
+        <!DOCTYPE html>
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                <title>404</title>
+            </head>
+            <style>
+                *{
+                    padding:0;
+                    margin:0;
+                }
+
+                html,body{
+                    height:100%;
+                }
+                #content{
+                    height:100%;
+                    width:100%;
+                }
+                #content > p{
+                    text-align:center;
+                    position:absolute;
+                    width:100px;
+                    height:100px;
+                    left:0;
+                    right:0;
+                    top:0;
+                    bottom:0;
+                    margin:auto;
+                    font-size:2rem;
+                }
+            </style>
+            <body>
+                <div id='content'>
+                    <p>
+                        404
+                    </p>
+                </div>
+            </body>
+        </html>
+HTML;
+    echo $html;
+    }
+
+    protected function showExceptionDetail(\Throwable $e)
+    {
         /**
          * 当存在缓冲区时，清空缓冲区
          */
-        if(ob_get_level())
-        {
+        if (ob_get_level()) {
             ob_clean();
         }
         if ($this->app->getConfig('base.debug')) {
@@ -83,20 +144,17 @@ class ExceptionHandler
                     $stack .= $value['class'] . $value['type'];
                 }
                 $stack .= $value['function'] . '(';
-                if (isset($value['args'])) 
-                {
-                    foreach ($value['args'] as $args) 
-                    {
+                if (isset($value['args'])) {
+                    foreach ($value['args'] as $args) {
                         if (is_array($args)) {
-                          $args = str_replace(['{','}',':'],['[',']','=>'],json_encode($args));
+                            $args = str_replace(['{', '}', ':'], ['[', ']', '=>'], json_encode($args));
                         }
-                        if (is_object($args)) 
-                        {
+                        if (is_object($args)) {
                             $args = get_class($args);
                         }
-                        $stack .= htmlspecialchars((string)$args) . ',';
+                        $stack .= htmlspecialchars((string) $args) . ',';
                     }
-                    $stack = trim($stack,',');
+                    $stack = trim($stack, ',');
                 }
                 $stack .= ')</b></p>';
             }
