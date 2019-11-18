@@ -10,7 +10,8 @@ class TestController
 {
     public function test(Application $app)
     {
-        view('test.test',['test'=>'aaaa']);
+        $a = view('test.test',['test'=>'aaaa']);
+        var_dump($a);
     }
 
     public function test2($id, $username)

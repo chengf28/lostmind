@@ -61,6 +61,12 @@ class ExceptionHandler
      */
     public function ExcepHandler(\Throwable $e)
     {
+        /**
+         * 当存在缓冲区时，清空缓冲区
+         */
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
         // 页面未找到
         if($e instanceof PageNotFoundException)
         {
@@ -122,12 +128,7 @@ HTML;
 
     protected function showExceptionDetail(\Throwable $e)
     {
-        /**
-         * 当存在缓冲区时，清空缓冲区
-         */
-        if (ob_get_level()) {
-            ob_clean();
-        }
+        
         if ($this->app->getConfig('base.debug')) {
             $exceptionName = get_class($e) . ':';
             $msg           = htmlentities($e->getMessage());

@@ -14,10 +14,8 @@ class ViewContent
     {
         extract($value);
         ob_start();
-        $level = ob_get_level();
         include $fileName;
-        $ret = ob_get_clean();
-        return $ret;
+        return ob_get_clean();
     }
 
     public function section(string $name)
@@ -46,6 +44,7 @@ class ViewContent
             $section = array_pop($this->sectionsStack);
             $this->sections[$section] = ob_get_clean();
         }
+        echo '#viewcontent-placeholder-'. uniqid() ."\n";
     }
 
     public function showSection()
@@ -57,7 +56,7 @@ class ViewContent
             throw new InvalidArgumentException("Section has not ending tag");
         }
         if ($this->deep > 0) {
-            $a = ob_get_clean();
+            ob_end_clean();
             --$this->deep;
             $section = array_pop($this->sectionsStack);
             if (isset($this->sections[$section])) {
@@ -74,6 +73,7 @@ class ViewContent
      */
     public function show($templename)
     {
+        $a = ob_get_contents();
         \Core\Facade\View::make($templename);
     }
 }

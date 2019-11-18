@@ -83,9 +83,12 @@ class View
             $this->compile($source, $target);
         }
 
-        if (!$this->content) {
-            $this->content = $this->viewContent->import($target, $this->values);
-        }
+        
+        $content = $this->viewContent->import($target, $this->values);
+        // if (!$this->content) {
+            $this->content[] = $content;
+        // }
+        
         return $this;
     }
 
